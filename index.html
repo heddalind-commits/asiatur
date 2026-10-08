@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12938A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Asiaturen">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2312938A'/%3E%3Ccircle cx='44' cy='20' r='9' fill='%23FFC94A'/%3E%3Cpath d='M6 44 Q16 36 26 44 T46 44 T66 44' stroke='%23fff' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icon.png">
+<script>
+/* ===== Firebase-innstillinger: lim inn her ===== */
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBUsBTjBVLKiGKIXzwQ0nReOcoV3uiZUSU",
+  authDomain: "asiatur.firebaseapp.com",
+  projectId: "asiatur",
+  storageBucket: "asiatur.firebasestorage.app",
+  messagingSenderId: "559691029783",
+  appId: "1:559691029783:web:a92f5e47d177fe5ea02b52"
+};
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<title>Asiaturen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: a sunny postcard header (sky-to-lagoon wash with a sun), pill tabs, map beside the tip list on wide screens, stacked on phones */
+:root{
+  --bg:#F5FAF9; --surface:#FFFFFF; --surface-2:#EEF6F4; --line:#DCEAE6;
+  --ink:#1D3337; --ink-2:#4F676A; --ink-3:#86999B;
+  --jade:#12938A; --jade-ink:#FFFFFF; --mango:#FF8A5B; --mango-soft:#FFE9DE; --sun:#FFC94A;
+  --sky-a:#FFE7CF; --sky-b:#FFF4E2; --sky-c:#D3F1EC;
+  --sea:#C5E9EE; --land:#FFFDF8; --land-focus:#FFF4DF; --border-land:#E0CDA8;
+  --c-mat:#F2B705; --c-sov:#E03A3A; --c-akt:#18A37A; --c-ute:#B25AC9; --c-shop:#EC5FAE; --c-unnga:#7C8486; --c-sted:#2F7FE0;
+  --danger:#D93B2B;
+  --k-vn:#FF7F5C; --k-th:#4C8DE8; --k-no:#D4DEDB; --k-x:#E8B23E;
+  --shadow:0 1px 2px rgba(29,51,55,.05), 0 6px 18px rgba(29,51,55,.06);
+  --display:"Fredoka", "Avenir Next Rounded", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --body:"Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1E20; --surface:#16292B; --surface-2:#1C3335; --line:#284245;
+  --ink:#EAF5F3; --ink-2:#AFC6C5; --ink-3:#7F9A9A;
+  --jade:#4FD1C0; --jade-ink:#06201D; --mango:#FF9E78; --mango-soft:#3B2A22; --sun:#FFD36B;
+  --sky-a:#3A2C2A; --sky-b:#1D3133; --sky-c:#173B3B;
+  --sea:#123438; --land:#223A36; --land-focus:#2B4741; --border-land:#4B6660;
+  --c-mat:#FFD24A; --c-sov:#FF7A70; --c-akt:#4FD3A3; --c-ute:#D594E6; --c-shop:#FF8FCB; --c-unnga:#A9B2B3; --c-sted:#6FAAF5;
+  --danger:#FF8A80;
+  --k-vn:#FF9475; --k-th:#7DAFF5; --k-no:#3A5254; --k-x:#F0C565;
+  --shadow:0 1px 2px rgba(0,0,0,.25), 0 6px 18px rgba(0,0,0,.2);
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F1E20; --surface:#16292B; --surface-2:#1C3335; --line:#284245;
+  --ink:#EAF5F3; --ink-2:#AFC6C5; --ink-3:#7F9A9A;
+  --jade:#4FD1C0; --jade-ink:#06201D; --mango:#FF9E78; --mango-soft:#3B2A22; --sun:#FFD36B;
+  --sky-a:#3A2C2A; --sky-b:#1D3133; --sky-c:#173B3B;
+  --sea:#123438; --land:#223A36; --land-focus:#2B4741; --border-land:#4B6660;
+  --c-mat:#FFD24A; --c-sov:#FF7A70; --c-akt:#4FD3A3; --c-ute:#D594E6; --c-shop:#FF8FCB; --c-unnga:#A9B2B3; --c-sted:#6FAAF5;
+  --danger:#FF8A80;
+  --k-vn:#FF9475; --k-th:#7DAFF5; --k-no:#3A5254; --k-x:#F0C565;
+  --shadow:0 1px 2px rgba(0,0,0,.25), 0 6px 18px rgba(0,0,0,.2);
+  color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:14px 56px}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15;font-weight:600}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--mango);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header: postcard */
+header.top{position:relative;overflow:hidden;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;
+  padding:30px 24px 26px;margin-bottom:16px;border-radius:24px;
+  background:linear-gradient(160deg,var(--sky-a) 0%,var(--sky-b) 45%,var(--sky-c) 100%)}
+header.top .sun{position:absolute;right:-30px;top:-40px;width:170px;height:170px;border-radius:50%;background:var(--sun);opacity:.55;pointer-events:none}
+header.top .waves{position:absolute;left:0;right:0;bottom:0;width:100%;height:34px;pointer-events:none}
+header.top .waves path{fill:none;stroke:var(--jade);stroke-width:2;opacity:.25;stroke-linecap:round}
+header.top > *:not(.sun):not(.waves){position:relative}
+.title-block{min-width:0}
+.eyebrow{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-weight:700}
+h1{font-size:clamp(32px,5.5vw,50px);font-weight:700;letter-spacing:-.01em;margin-top:2px}
+h1 .amp{color:var(--mango)}
+.route{color:var(--ink-2);margin-top:6px;font-weight:600}
+.countdown{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:20px;padding:12px 18px;box-shadow:var(--shadow)}
+.countdown b{font-family:var(--display);font-size:38px;font-weight:700;color:var(--mango);line-height:1}
+.countdown span{color:var(--ink-2);font-size:13px;font-weight:600;max-width:12ch;line-height:1.25}
+
+/* tabs: pills */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding-block:8px;margin-bottom:18px;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+nav.tabs button:hover{border-color:var(--jade)}
+nav.tabs button[aria-selected="true"]{color:var(--jade-ink);background:var(--jade);border-color:var(--jade)}
+nav.tabs .count{font-size:12px;opacity:.75;font-weight:600;margin-left:5px}
+
+.notice{background:var(--mango-soft);border-radius:var(--r);padding:10px 14px;margin-bottom:16px;font-size:14px}
+
+/* generic */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--jade);color:var(--jade-ink);border-color:var(--jade)}
+.btn.ghost{background:none;border-color:transparent;color:var(--ink-2);padding:6px 8px}
+.btn.ghost:hover{color:var(--ink);border-color:var(--line)}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.spread{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink-2);min-width:0}
+input[type=text],input[type=number],input[type=date],input[type=time],input[type=url],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:15px;width:100%;min-width:0;font-weight:400;color:var(--ink)}
+textarea{resize:vertical;min-height:64px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.empty{color:var(--ink-2);padding:28px 16px;text-align:center;border:1px dashed var(--line);border-radius:var(--r)}
+.empty strong{display:block;color:var(--ink);font-family:var(--display);font-size:18px;margin-bottom:4px}
+.muted{color:var(--ink-3);font-size:13px}
+h2.sec{font-size:22px;font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);white-space:nowrap}
+.chip .dot{width:8px;height:8px;border-radius:50%}
+button.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* map + tips */
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;align-items:start}
+@media (max-width:860px){.split{grid-template-columns:minmax(0,1fr)}}
+.mapcol{position:sticky;top:60px}
+@media (max-width:860px){.mapcol{position:static}}
+.mapbox{position:relative;background:var(--sea);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;aspect-ratio:770/1100;max-height:calc(100vh - 140px);width:100%;touch-action:none}
+@media (max-width:860px){.mapbox{aspect-ratio:auto;height:62vh;max-height:none}}
+.mapbox svg{width:100%;height:100%;display:block;cursor:grab;user-select:none}
+.mapbox.dragging svg{cursor:grabbing}
+.mapbox.picking svg{cursor:crosshair}
+.country{fill:var(--land);stroke:var(--border-land);stroke-width:1;vector-effect:non-scaling-stroke}
+.country.focus{fill:var(--land-focus)}
+.clabel{fill:var(--ink-3);font-family:var(--display);font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.city circle{fill:var(--ink-2)}
+.city text{fill:var(--ink-2);font-weight:600;paint-order:stroke;stroke:var(--land);stroke-width:3px;stroke-linejoin:round}
+.pin{cursor:pointer}
+.pin circle.halo{fill:var(--surface);opacity:.9}
+.pin.active circle.halo{fill:var(--mango)}
+.mapctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.mapctl button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:18px;font-weight:700;display:grid;place-items:center}
+.mapview{position:absolute;left:10px;top:10px;display:flex;gap:4px;flex-wrap:wrap}
+.mapview button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 10px;font-size:12px;font-weight:600}
+.pickbar{position:absolute;left:10px;right:10px;bottom:10px;background:var(--ink);color:var(--bg);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.pickbar button{background:none;border:1px solid currentColor;color:inherit;border-radius:6px;padding:4px 10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+
+.toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.tiplist{display:flex;flex-direction:column;gap:10px}
+.tip{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:6px;scroll-margin-top:80px}
+.tip.active{border-color:var(--mango);box-shadow:0 0 0 2px var(--mango-soft)}
+.tip h3{font-size:18px;font-weight:700;min-width:0;overflow-wrap:anywhere}
+.tip .meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;color:var(--ink-2)}
+.tip p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.tip .acts{display:flex;flex-wrap:wrap;gap:2px;margin-left:-8px}
+.tip a{color:var(--jade);font-weight:600}
+.fav[aria-pressed="true"]{color:var(--mango)}
+.formcard{background:var(--surface);border:1px solid var(--jade);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600}
+.seg button[aria-pressed="true"]{border-color:var(--jade);background:var(--jade);color:var(--jade-ink)}
+.confirm{display:flex;gap:6px;align-items:center;font-size:13px}
+
+/* days */
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.day .dhead{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.day .dnum{font-family:var(--display);font-weight:800;font-size:20px}
+.day .ddate{color:var(--ink-2);font-size:13px}
+.day select{font-size:13px;padding:5px 8px}
+.item{display:flex;gap:8px;align-items:flex-start;font-size:14px;padding:6px 0;border-top:1px solid var(--line)}
+.item .t{color:var(--ink-3);min-width:44px}
+.item .x{margin-left:auto}
+.item .txt{min-width:0;overflow-wrap:anywhere}
+.addline{display:flex;gap:6px}
+.addline input[type=time]{width:92px;flex:none}
+
+/* money */
+.balances{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px}
+.bal{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.bal .n{font-weight:600}
+.bal .v{font-family:var(--display);font-size:22px;font-weight:700}
+.pos{color:var(--jade)} .neg{color:var(--danger)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+td.r,th.r{text-align:right}
+tr:last-child td{border-bottom:0}
+.settle{display:flex;flex-direction:column;gap:6px;margin-block:12px}
+
+/* packing */
+.packgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line)}
+.check input{margin-top:4px;width:18px;height:18px;accent-color:var(--jade);flex:none}
+.check.done .txt{color:var(--ink-3);text-decoration:line-through}
+.check .x{margin-left:auto}
+
+.stack{display:flex;flex-direction:column;gap:14px}
+.booking{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:12px;align-items:start}
+.booking .when{font-family:var(--display);font-weight:700}
+@media (max-width:520px){.booking{grid-template-columns:minmax(0,1fr) auto}.booking .when{grid-column:1/-1}}
+.ref{font-variant-numeric:tabular-nums;letter-spacing:.04em;background:var(--surface-2);padding:1px 6px;border-radius:4px}
+/* view switch */
+.viewsw{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:14px}
+.viewsw .lbl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.viewsw .seg button{border-radius:99px;padding:6px 14px}
+.tag{font-size:11px;font-weight:600;padding:1px 7px;border-radius:99px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+
+/* timeline */
+.tl{display:flex;flex-direction:column;gap:14px}
+.tlrow .tlname{font-weight:600;margin-bottom:6px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.tlscroll{overflow-x:auto;padding-bottom:4px}
+.tlcells{display:flex;gap:2px;min-width:max-content}
+.tlcell{width:30px;flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--ink-3)}
+.tlcell .bar{width:100%;height:22px;border-radius:4px;display:grid;place-items:center;color:#fff;font-size:12px}
+.tlcell .bar.off{background:var(--surface-2)}
+.tlcell.today .d{color:var(--ink);font-weight:700}
+.tlsum{font-size:13px;color:var(--ink-2)}
+.klegend{display:flex;flex-wrap:wrap;gap:6px}
+.flight{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.flight .route{font-weight:600;color:var(--ink);margin:0;overflow-wrap:anywhere}
+.flight .when{font-size:13px;color:var(--ink-2)}
+.cbadge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.cbadge i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:50}
+@media (prefers-reduced-motion:no-preference){.tip,.day{transition:border-color .2s, box-shadow .2s}}
+
+/* gate */
+.gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:24px 16px;overflow:auto}
+.gatecard{width:100%;max-width:440px;background:var(--surface);border-radius:24px;box-shadow:var(--shadow);padding:28px 24px;display:flex;flex-direction:column;gap:14px}
+.gatecard h2{font-size:28px;font-weight:700}
+.gatecard .or{display:flex;align-items:center;gap:10px;color:var(--ink-3);font-size:13px}
+.gatecard .or::before,.gatecard .or::after{content:"";flex:1;height:1px;background:var(--line)}
+.gatecard .people{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gatecard .people button{padding:14px 10px;border-radius:14px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-size:16px}
+.gatecard .people button:hover{border-color:var(--jade)}
+.gatecard .err{color:var(--danger);font-size:14px}
+/* friendly overrides */
+.btn{border-radius:99px;padding:8px 16px;font-weight:700}
+.btn.ghost{border-radius:99px}
+.btn.primary{box-shadow:0 3px 10px color-mix(in srgb,var(--jade) 30%,transparent)}
+.btn.primary:hover{filter:brightness(1.05)}
+input[type=text],input[type=number],input[type=date],input[type=time],input[type=url],select,textarea{border-radius:12px;padding:9px 12px}
+.panel,.tip,.day,.bal,.formcard{border-radius:var(--r);box-shadow:var(--shadow);border-color:transparent}
+.formcard{border:2px solid var(--jade)}
+.tip.active{border-color:var(--mango);box-shadow:0 0 0 3px var(--mango-soft),var(--shadow)}
+.tablewrap{border-radius:var(--r);box-shadow:var(--shadow);border-color:transparent}
+.mapbox{border-radius:20px;border-color:transparent;box-shadow:var(--shadow)}
+.mapctl button,.mapview button{box-shadow:var(--shadow);border-color:transparent}
+.empty{border-radius:var(--r);border:2px dashed var(--line);background:var(--surface)}
+.empty strong{font-weight:600}
+.chip{border-radius:99px;padding:4px 11px}
+button.chip[aria-pressed="true"]{background:var(--jade);color:var(--jade-ink);border-color:var(--jade)}
+.seg button{border-radius:99px;padding:6px 13px}
+.notice{border-radius:var(--r)}
+.day .dnum{font-weight:700;color:var(--jade)}
+.bal .v{font-weight:600}
+.tlcell .bar{border-radius:6px}
+h2.sec{font-weight:600}
+.viewsw .seg button{background:var(--surface);border-color:transparent;box-shadow:var(--shadow)}
+.viewsw .seg button[aria-pressed="true"]{background:var(--mango);color:#2B1409;border-color:var(--mango)}
+.toast{border-radius:99px;padding:10px 20px}
+</style>
+<style>html,body{margin:0} :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} img{max-width:100%} [hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="sun" aria-hidden="true"></div>
+    <svg class="waves" viewBox="0 0 1200 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 Q 50 12 100 22 T 200 22 T 300 22 T 400 22 T 500 22 T 600 22 T 700 22 T 800 22 T 900 22 T 1000 22 T 1100 22 T 1200 22"/></svg>
+    <div class="title-block">
+      <div class="eyebrow" id="tripDates">Desember – januar</div>
+      <h1 id="tripName">Thailand <span class="amp">&amp;</span> Vietnam</h1>
+      <div class="route" id="tripPeople">Fire reisende · to land</div>
+    </div>
+    <div class="countdown" id="countdown"><b>–</b><span>Sett avreisedato under Turinfo</span></div>
+  </header>
+
+  <div class="viewsw"><span class="lbl">Vis turen for</span><div class="seg" id="viewSw"></div></div>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="tips" aria-selected="true">Kart og tips<span class="count" id="nTips"></span></button>
+    <button role="tab" data-tab="plan" aria-selected="false">Dagsplan</button>
+    <button role="tab" data-tab="money" aria-selected="false">Utgifter</button>
+    <button role="tab" data-tab="book" aria-selected="false">Bookinger<span class="count" id="nBook"></span></button>
+    <button role="tab" data-tab="pack" aria-selected="false">Pakkeliste<span class="count" id="nPack"></span></button>
+    <button role="tab" data-tab="info" aria-selected="false">Turinfo</button>
+  </nav>
+
+  <div id="notice" class="notice" hidden></div>
+
+  <!-- TIPS -->
+  <section data-panel="tips">
+    <div class="split">
+      <div class="mapcol">
+        <div class="mapbox" id="mapbox">
+          <svg id="map" xmlns="http://www.w3.org/2000/svg" aria-label="Kart over Thailand og Vietnam"></svg>
+          <div class="mapview">
+            <button data-view="all">Alt</button>
+            <button data-view="th">Thailand</button>
+            <button data-view="vn">Vietnam</button>
+          </div>
+          <div class="mapctl">
+            <button id="zin" aria-label="Zoom inn">+</button>
+            <button id="zout" aria-label="Zoom ut">−</button>
+          </div>
+          <div class="pickbar" id="pickbar" hidden><span>Trykk på kartet der stedet ligger</span><button id="pickCancel">Avbryt</button></div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div>
+        <div class="toolbar">
+          <div class="spread">
+            <h2 class="sec">Tipsbanken</h2>
+            <div class="row">
+              <button class="btn" id="shareTips">Kopier tips som tekst</button>
+              <button class="btn primary" id="newTip">+ Nytt tips</button>
+            </div>
+          </div>
+          <div class="row">
+            <input type="text" id="q" placeholder="Søk i tips, steder og hvem som tipset">
+          </div>
+          <div class="row" id="catFilter"></div>
+          <div class="row">
+            <select id="cityFilter" aria-label="Filtrer på sted" style="width:auto"></select>
+            <label class="row muted" style="gap:6px"><input type="checkbox" id="favOnly"> Bare favoritter</label>
+          </div>
+        </div>
+        <div id="tipForm"></div>
+        <div class="tiplist" id="tipList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section data-panel="plan" hidden>
+    <div class="spread" style="margin-bottom:14px"><h2 class="sec">Dag for dag</h2><span class="muted" id="planHint"></span></div>
+    <div id="planBody"></div>
+  </section>
+
+  <!-- MONEY -->
+  <section data-panel="money" hidden>
+    <div class="spread" style="margin-bottom:14px"><h2 class="sec">Felles utgifter</h2><span class="muted" id="rateHint"></span></div>
+    <div id="balances"></div>
+    <div class="panel" style="margin-bottom:14px">
+      <form id="expForm" class="stack">
+        <div class="grid2">
+          <label class="f">Hva<input type="text" id="exWhat" placeholder="Middag i Hoi An" required></label>
+          <label class="f">Beløp<input type="number" id="exAmt" min="0" step="any" inputmode="decimal" required></label>
+          <label class="f">Valuta<select id="exCur"><option>THB</option><option>VND</option><option>NOK</option><option>USD</option></select></label>
+          <label class="f">Betalt av<select id="exPaid"></select></label>
+        </div>
+        <div><div class="muted" style="margin-bottom:6px">Deles på</div><div class="row" id="exSplit"></div></div>
+        <div><button class="btn primary" type="submit">Legg til utgift</button></div>
+      </form>
+    </div>
+    <div id="expList"></div>
+  </section>
+
+  <!-- BOOKINGS -->
+  <section data-panel="book" hidden>
+    <div class="spread" style="margin-bottom:14px"><h2 class="sec">Bookinger</h2></div>
+    <div class="panel" style="margin-bottom:14px">
+      <form id="bookForm" class="stack">
+        <div class="grid2">
+          <label class="f">Gjelder<select id="bkWho"></select></label>
+          <label class="f">Type<select id="bkType"><option>Fly</option><option>Overnatting</option><option>Transport</option><option>Aktivitet</option><option>Annet</option></select></label>
+          <label class="f">Hva<input type="text" id="bkTitle" placeholder="Oslo – Bangkok" required></label>
+          <label class="f">Dato<input type="date" id="bkDate"></label>
+          <label class="f">Bekreftelsesnr.<input type="text" id="bkRef" placeholder="ABC123"></label>
+        </div>
+        <label class="f">Notat<input type="text" id="bkNote" placeholder="Innsjekk fra kl. 14, betalt av …"></label>
+        <div><button class="btn primary" type="submit">Legg til booking</button></div>
+      </form>
+    </div>
+    <div id="bookList" class="stack"></div>
+  </section>
+
+  <!-- PACKING -->
+  <section data-panel="pack" hidden>
+    <div class="spread" style="margin-bottom:14px"><h2 class="sec">Pakke- og huskeliste</h2><button class="btn" id="packSuggest">Legg inn forslag til huskeliste</button></div>
+    <div class="panel" style="margin-bottom:14px">
+      <form id="packForm" class="row">
+        <input type="text" id="pkText" placeholder="Hva må med eller fikses?" style="flex:2 1 220px" required>
+        <select id="pkWho" style="flex:1 1 140px"></select>
+        <button class="btn primary" type="submit">Legg til</button>
+      </form>
+    </div>
+    <div id="packList"></div>
+  </section>
+
+  <!-- INFO -->
+  <section data-panel="info" hidden>
+    <div class="stack" style="max-width:900px">
+    <div class="panel stack" id="sharePanel">
+      <h2 class="sec">Del turen</h2>
+      <div class="muted">Alle som har denne lenken kan se og endre turen. Send den bare til dere fire.</div>
+      <div class="row" style="flex-wrap:nowrap"><input type="text" id="shareLink" readonly style="flex:1"><button class="btn primary" id="copyLink" type="button">Kopier lenke</button></div>
+      <div class="row"><span>Du er <b id="meName">–</b></span><button class="btn ghost" id="switchMe" type="button">Bytt person</button></div>
+      <div class="row" style="border-top:1px solid var(--line);padding-top:12px">
+        <button class="btn" id="exportBtn" type="button">Last ned sikkerhetskopi</button>
+        <label class="btn" for="importFile" style="cursor:pointer">Importer fra fil</label>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+        <span class="muted" id="importMsg"></span>
+      </div>
+    </div>
+    <div class="panel stack">
+      <div class="spread"><h2 class="sec">Hvor er vi når?</h2><div class="klegend" id="kLegend"></div></div>
+      <div id="timeline"></div>
+    </div>
+    <div class="panel stack">
+      <h2 class="sec">Flyreiser</h2>
+      <div id="flightList"></div>
+      <form id="flightForm" class="stack" style="border-top:1px solid var(--line);padding-top:14px">
+        <div class="grid2">
+          <label class="f">Hvem flyr<select id="flWho"></select></label>
+          <label class="f">Flynummer<input type="text" id="flNo" placeholder="TG 955"></label>
+          <label class="f">Fra<input type="text" id="flFrom" placeholder="Oslo" required></label>
+          <label class="f">Til<input type="text" id="flTo" placeholder="Hanoi" required></label>
+          <label class="f">Lander i<select id="flCountry"><option value="VN">Vietnam</option><option value="TH">Thailand</option><option value="NO">Norge (hjem)</option><option value="X">Annet land</option></select></label>
+        </div>
+        <div class="grid2">
+          <label class="f">Avreise dato<input type="date" id="flDepD" required></label>
+          <label class="f">Avreise kl.<input type="time" id="flDepT"></label>
+          <label class="f">Ankomst dato<input type="date" id="flArrD"></label>
+          <label class="f">Ankomst kl.<input type="time" id="flArrT"></label>
+        </div>
+        <div class="row"><button class="btn primary" type="submit" id="flSubmit">Legg til flyreise</button><span class="muted">Lokal tid på hvert sted. Mellomlandinger kan legges inn som egne fly.</span></div>
+      </form>
+    </div>
+    <div class="panel stack">
+      <h2 class="sec">Reisende og par</h2>
+      <div class="grid2" id="stPeople"></div>
+      <div>
+        <div class="muted" style="margin-bottom:6px">Datoer for hele turen. Brukes bare før dere har lagt inn flyreiser.</div>
+        <div class="grid2">
+          <label class="f">Avreise<input type="date" id="stStart"></label>
+          <label class="f">Hjemkomst<input type="date" id="stEnd"></label>
+        </div>
+      </div>
+      <div>
+        <div class="muted" style="margin-bottom:6px">Omtrentlige kurser til NOK. Sjekk dagens kurs og juster.</div>
+        <div class="grid2">
+          <label class="f">1 THB = NOK<input type="number" step="any" id="rtTHB"></label>
+          <label class="f">1000 VND = NOK<input type="number" step="any" id="rtVND"></label>
+          <label class="f">1 USD = NOK<input type="number" step="any" id="rtUSD"></label>
+        </div>
+      </div>
+      <div class="row"><button class="btn primary" id="saveInfo">Lagre reisende og kurser</button><span class="muted" id="infoSaved"></span></div>
+    </div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast" hidden></div>
+<div class="gate" id="gate" hidden><div class="gatecard" id="gateCard"></div></div>
+
+<script>
+(function(){
+const MAP = {"W":770,"H":1100,"k":55,"tx":384.99999999999983,"ty":1347.5,"paths":[{"k":"vn","d":"M416,776L417,778.8L416.6,785.1L414.5,791.4L415.3,794.2L413.5,795.9L409.9,784.1L405.2,779.1L404.2,777.1L406.9,777.3L411.7,774L414.1,773.9ZM631.1,164.6L628.5,165L622,165.1L616.4,170.2L612.5,172.3L606.5,174L600,176.9L598.2,181.8L598,185.5L597,189.5L586.5,195.3L583.6,194.7L581.6,192.5L578.6,193L576.4,194.1L574,194L571.3,195.2L567.7,194.8L564.3,193L562.4,192.5L560,192.4L559.6,194.6L563,203.1L564,207.1L552.9,218.5L554.1,226L551.1,231.6L544.3,236.2L531.7,247.9L525.9,248.2L521.6,250.9L512.3,270.2L512.1,276.8L510.7,281.6L511.1,286.3L506.9,295.5L502.6,299.4L501.8,304.3L507.7,314.7L508.5,316.5L511.9,322L513.7,325.9L516.4,329.8L526.1,340.1L530.5,343.2L535.6,345.4L545.1,354.6L549.9,360.5L547.7,364.4L548.9,372.9L542,370.4L543,371.5L550.9,376.1L563,392.3L573.5,400.3L584.1,409.5L587.5,418.2L597,423.9L607.7,432.2L607.3,434L610.1,436.3L617.4,440.7L621.8,445.4L623.4,449.8L625.9,450.4L629.1,449.4L632.1,449L634,449.3L637.4,454.2L641.8,458.5L643.9,462.5L645.7,462L647.1,462.6L647.5,465.9L648.3,468.1L654.2,474.5L657,480.5L664.3,490.3L669.5,495.9L673.4,499L677.6,501.7L682,512.6L684.1,522.4L688.7,533.3L692.3,538.1L692.3,547.2L695,556.4L698,562.6L699,569L699.8,572.2L701,574.6L704.1,585.4L703.3,590.4L701.2,585.5L701.4,600L703.3,607.7L702.4,617.1L704.5,620.5L708.3,631.1L710.9,634.9L710.7,648L712.1,654.6L708.5,650.7L705.9,646.2L702.6,648.6L699.6,652L704.3,666L698.8,664.7L699.4,683.5L701.6,687.9L701.8,690L701.2,692.6L699.6,689.8L699.4,686.9L698.4,687.5L698.6,689L696.6,692.4L696.2,696.5L698,699.9L698.4,702.6L697,705.9L694.8,709.5L689.7,709.9L688.5,716.7L686.7,724L677.6,725.1L671.1,731.5L662.8,733.9L655.4,740.3L647.5,746.1L642.2,746.9L637.8,748.1L632.7,757.9L623.9,759L608.5,766.9L603.4,770.8L598.6,772.3L591.9,775.6L590.5,774.4L588.1,771.5L582.4,770.1L579.4,766.9L578.6,762.8L577.8,761.2L576.6,763.5L575.6,773.2L574.6,775.4L572.1,776.4L567.1,773.6L562.6,768L555.8,771.9L557.8,772.4L561,772.1L563.4,773.1L565.3,776.8L565.1,778.9L564.1,781.3L557.8,781.6L549.5,780.8L548.1,781.1L555.6,784.8L562.6,786.9L565.7,789.2L565.7,791.1L561.8,794.2L558.8,798L558.6,800.4L558.6,802.9L555.2,805.2L553.1,804.8L547.1,800.8L530.1,785.3L532.7,789.7L550.5,807.3L553.5,813.2L554.1,817.3L552.1,819.3L549.1,821.8L543.4,821.9L533.7,815.4L518.4,799.6L513.3,797.5L528.7,815.4L531.3,819.8L533.9,824.9L533.1,827.9L531.7,830.7L495,847.3L489.5,854.6L485.1,863.5L478,868.3L473.9,872.9L461.6,875.4L454.9,874.6L461.8,866.4L457.4,863.4L457.2,842.3L459,819.2L462.2,807.6L466.7,804.8L472.7,802.9L472.7,800.6L472.1,797.7L469.1,793.8L465.5,792L460.6,791.2L456.6,786.3L453.7,786.5L448.9,788.1L446.1,786L445.2,782.8L440.8,778.8L436,774.9L438.2,774.3L440.8,772L443.6,769.1L450.5,768.8L457.4,768.9L459.2,768.1L462,765L466.5,761.1L470.1,758.9L470.9,757.1L469.5,753L468.7,748.7L470.1,747.4L476.2,748.1L483.2,750.1L484.8,751L488.7,745.7L489.9,745.2L492.5,745.2L499.2,744.2L505.9,742.8L509.1,743.1L512.1,746.6L514.5,750L515.6,750.2L519,748.8L522,750.6L527.9,753.7L531.5,753.8L529.7,746.8L531.7,741.8L531.3,740.5L527.9,738.2L516.6,729L514.6,726.3L514.8,722L514.5,715.7L513.5,711.8L513.7,709.5L514.3,707.6L516.4,706.8L518.4,706.6L520,705L522.8,700.8L528.1,701.2L535.6,703.5L541.2,705L544.5,704.7L545.1,704.1L545.1,701.9L545.5,692.4L545.3,690.4L549.9,689.4L557.2,689.2L561,688.7L564.5,684.6L573.7,683.2L580.4,677.9L586.3,672.2L589.1,670.8L592.9,669.8L595.6,669.9L599.2,673.2L602,671.3L605.3,667.5L607.1,663.7L608.1,657.8L607.3,648.6L605.7,641.6L603.9,636.1L603.6,630.8L607.5,620.1L610.9,608.4L610.1,603.8L606.5,596.5L603,587.6L599,577.9L597.4,576.5L596.4,573.7L595.6,570.5L597.4,560.6L597.6,557.2L602.2,552.7L604.5,547.4L606.9,541.7L606.1,538.7L605.7,532.5L606.3,529.6L605.3,527.1L603.9,523.6L604.7,521.3L608.1,519.4L609.9,516L612.3,512L613.5,508.5L611.7,505.4L608.5,500.9L602.8,496.8L596.2,491.7L592.9,488.4L590.3,485.2L587.9,481.4L586.7,478.4L587.9,476.4L597.4,471.8L599,470.2L600,467.6L599.4,465.1L596.8,463.8L593.9,462.8L589.5,460L581.4,452.1L577.6,450.3L573.7,448L571.7,445.7L569.3,439.2L568.3,438.6L566.1,440.5L563.2,442.6L560.8,442.2L558.6,440.4L557.6,437.9L555.2,434.5L552.5,431.7L551.9,422.4L551.5,419.3L550.1,415L548.1,413.5L545.9,412.3L540.8,404.6L537.4,400.6L522.8,389.7L521,387.9L517.2,383.4L510.3,377.1L505.5,371.9L502,366.6L500.4,362L499.8,358.4L496,353.2L492.7,349L489.5,347.6L485.9,347L482.6,344.5L476.4,338.9L473.9,335.2L472.3,332.7L472.3,330.2L473.7,326L475.4,323.5L475.6,321.7L473.9,320.2L467.1,317.4L451.9,313.3L446.1,310.2L441,306.2L437,303.4L418.4,291.7L412.9,289.8L407.9,287.7L406.5,285.7L406.7,283.8L408.7,282.4L414.1,279.3L416,276L415.3,271.5L413.3,266.9L414.3,265.4L416,265.2L419.4,265L426.7,264.8L442.6,268.9L444.8,268.4L453.5,261L456.6,256.5L457.4,252.8L459,250.4L463.6,246.5L463.6,243L461.4,238.2L459.2,236.4L457.2,235.6L450.9,236.2L449.7,235.1L448.9,231.6L448.5,229.4L446.5,226.9L439.8,224.7L434.1,224.1L432.7,223.2L434.9,220.8L438.8,218.4L441.8,217L444.2,214.5L444.6,211.9L441.6,209.6L437.8,207.1L431.7,202.4L423.2,197.2L418,195.5L415.5,195.7L405.9,200.1L401,202.9L396.8,208.1L392.5,209.2L387.9,207L383,204.6L369.1,201.2L363.2,198.5L351.1,181.4L349.3,177.8L350.5,173.9L351.3,168.3L352.5,164.7L354.7,161.1L355.3,158.1L354.7,155L352.9,153.3L350.7,152.8L348.9,152.1L347.3,148.1L346.3,148.6L345,153.5L343.2,155.2L340.8,156.1L338.8,155.3L337.8,153.4L337.2,150L336.1,145.7L334.5,142.8L329.3,139.8L326.9,136L319,127.7L312.5,121.9L309.5,116.6L312.1,114.7L315.5,111.9L319.2,107.5L323.2,101.9L324.8,98.6L326,97.2L328.3,96.2L330.9,96.8L335.5,99L342.2,101.8L348.1,105.2L350.5,108.6L353.9,111.9L356.4,112.8L357.8,112.6L361.6,110.1L365,107.7L365.2,104.9L368.1,102.4L372.1,98.3L374.1,95.4L375.5,95.1L377,96L383.4,104.6L384.6,105.2L386.3,103.8L388.9,97.2L391.7,94.5L392.5,95.1L407.7,107.9L409.3,107.8L410.9,107.2L412.1,105.3L413.3,100.9L415.5,96.1L420.4,93.5L424.2,93L425.5,95.2L428.9,98.3L432.9,98.8L441.4,93.2L444.4,92.4L447.3,92.5L450.3,92.3L453.3,90.2L456.2,87.4L457.2,81.9L458,77L460,75L462.6,73.7L467.3,71.9L477.8,67.1L480.6,64.8L482.6,63.5L486.7,65.5L491.7,69.6L494.7,72.5L496.6,75.8L497.6,78.5L505.5,80.8L510.5,84.2L513.9,86.7L517.2,86.6L520.4,86L522.6,83.9L526.3,83.9L530.7,84.2L532.7,84.9L536.2,89.7L537.8,90.4L541.2,90L547.3,88.4L552.3,87.5L556.8,89.4L565.3,94.7L563,98.4L561.2,102.4L557.4,105.3L554.4,105.9L552.9,109.9L552.1,115.8L552.9,118.7L555,119.7L557.4,121.6L558.4,124.2L558.8,130L558.6,136.5L559,138.7L560.8,138.3L562.6,137.4L566.1,138.5L570.7,140.2L573.5,141.9L575.8,141.6L577.8,143.4L578.6,146.6L581,148.8L587.3,153.1L592.5,153.4L596.8,159L601.4,157.2L603.4,159.6L612.7,158.7L619.2,156.4L621.6,157L627.5,161.7ZM556.4,870L554.8,870.1L553.7,868.9L558.8,865.4L558.2,867.8L558.4,868.9ZM586.7,775.6L582.2,779L581.8,776.2L585.7,774.4L587.1,773L588.3,773ZM570.1,202.7L569.5,203.7L566.7,201.1L564.7,200L566.3,196.5L569.5,200.3ZM610.7,180.6L602.8,187.5L599.8,187.4L602.4,179.6L603.8,177.7L608.5,180.4ZM606.1,196.5L603.2,198L599.4,197.8L603.8,195.1L606.1,191.8L607.9,190.6L607.7,193.5ZM579.2,206.4L577,206.7L572.7,202.2L574.8,199.8L580,201.5L581,202.6L581,203.5L579.8,205.6Z"},{"k":"th","d":"M335.9,705.3L334.9,711L331.9,708.7L332.5,705.7L333.9,704.5ZM326,688.1L326.2,689.4L323.4,688.5L322.4,688.9L319,688.6L317.4,680.9L317.8,679.1L320,679.7L323.4,683.5L325,686.1ZM105,912.8L104.4,916.9L102.2,916.8L99.8,919.4L98.8,919.8L96.9,911.6L99,900L100.2,898.3L101.8,901.4L106.4,902.8L104.4,909.4ZM199.2,230.1L198.8,233.3L200.2,234L202,232.5L204.6,228.8L207.2,226.7L209.9,226.2L213.1,228.8L216.3,234.3L219.6,237.4L221,237.7L222.2,240.2L222.4,242.7L220.8,247.7L218.2,253.6L214.3,260.9L215.7,267L220.8,272.1L227,275L233.5,274.2L236.9,272.7L239.6,270.4L242.4,269.2L245.6,268.9L256.1,270.6L259.2,272.4L259.6,275.7L258.4,284.5L260,290.9L263,297.6L263.2,303.8L259.6,313.9L256.7,323.5L253.3,328.1L250.9,331.2L250.1,333.2L250.3,335.1L252.7,338L255.1,341.7L255.7,345.3L255.5,349.7L253.7,355.6L247.5,368.7L242.4,380.3L245.2,382.7L249.9,384.5L253.3,386.2L256.7,385L264,378.2L270.3,373L278,367.8L278.4,367.4L285.4,363.5L288.3,360.1L290.1,355.6L292.5,353.9L295.7,354.9L299.6,353L304.4,348.2L308.1,345.9L310.7,346.3L315.3,349.3L321.8,354.9L327.7,358.4L332.9,359.4L335.5,361.5L335.3,364.7L336.4,366.7L338.8,367.6L339.8,367.2L339.6,365.6L342,363.4L346.9,360.5L351.9,358.8L357,358.3L360.4,355.9L362.6,349.9L365.8,345.3L368.5,343.2L371.9,342.2L372.9,340.7L371.1,338.8L371.3,337L373.3,335L377.6,334.2L384.4,334.5L392.1,336.4L401,340.1L406.9,341.3L409.7,340L415.3,345.6L423.4,358.1L430.3,367.6L436,374L442.2,379L448.5,382.4L453.3,387.1L457.4,396L454.3,408.2L453.5,418.8L453.9,431.9L457.6,441.8L464.8,448.8L468.9,454.4L470.1,458.6L475.6,462.4L485.7,465.4L489.9,468.2L488.1,470.7L488.1,473.5L489.5,476.9L492.9,479.6L498.4,481.7L501.8,484L502.8,486.4L502.6,490.2L501.4,495.7L499,499.8L495.6,502.7L495.2,504.9L494.5,508.4L494.5,515.5L496.8,520.2L497.6,526.2L496.2,531.1L495,541.1L494.8,545L493.7,548.3L490.7,551.5L486.3,554.6L481,557.3L477.6,558.4L476.8,559L474.5,562L471.5,565L469.3,565L467.7,563.5L466.5,561.6L465.7,557.4L460.8,555.3L455.2,553.9L444.2,556L435.1,557.2L425,555.7L415.5,557.6L411.5,557.8L406.9,557.6L402.6,557.6L398.2,556.9L390.5,554.3L387.5,554.5L381.2,556.7L374.7,558.1L368.5,559.2L359.2,563.6L352.5,570L350.5,574.5L347.1,579L342.6,586.2L336.6,593.1L332.5,596.2L333.7,598L332.5,600.3L326.2,601.3L321,601.7L320,602.8L320.6,616.7L322.4,621.9L325.8,628.2L327.9,631.7L329.5,642L329.9,650.7L337,656.2L341.2,660.4L344,664L343,666.4L341.4,673.5L343,682.5L353.1,702.2L353.9,703.6L352.7,703.8L351.1,700L346,693.6L344.4,686.8L338.4,679.3L335.3,676.3L334.1,678.8L332.3,681.5L326.3,677.7L321.4,673.6L316.8,665.8L316.3,667.6L315.1,669.3L309.9,663.2L304.4,658.3L299.4,656.5L296.5,654.9L293.5,652.3L287.3,649.6L271.9,653.4L252.5,650.5L245,653.3L241.8,651.5L240,648.2L241.8,642.5L242.2,630.6L244.6,622.2L243.4,615.8L244.6,612.8L245.4,608.7L242.4,607.1L228.5,603.9L225.6,601.3L222,604.2L205.4,605.9L199.2,608.4L193.5,613L191.9,619.1L195.3,623.1L197.5,630L191.5,645.1L190.5,649.5L192.9,668L191.9,678.1L188.7,684.9L183.6,690.9L181.4,701.4L177.5,706.1L171.9,717L168.3,730.7L165.8,737L164.2,748.6L153.1,766.2L150.5,776.1L146.6,779.9L147.9,782.9L148.1,787.9L146.8,801.1L146.4,812.1L147.9,818L153.3,829.7L152.1,833.1L151.5,837.9L155.9,840.1L159.2,840.8L177.3,835.2L183.4,836.6L185.8,841.8L187.4,846.3L190.3,870.5L191.9,875.1L195.7,879.4L199.6,883.9L201,883.1L201.2,881.4L201.4,879.5L205.2,884.1L207.9,892.7L217.4,938.1L220.2,944L222.4,950L216.7,947L215.1,937L213.5,932.7L211.3,932.1L208.1,932.1L207.9,930.4L210.3,927.1L209.9,923.2L206.6,919.9L201.2,922.5L201.4,929.5L203.8,935L212.9,947.1L215.9,952.2L219.4,953.6L224.8,952.8L231.1,958L236.1,962.8L248.5,970.1L256.1,969.4L264.2,967.5L269.5,968L274.9,969.9L281.2,976L291.5,991.4L308.1,1004.2L306.4,1007.4L305.6,1012.1L299,1018.6L298,1022.4L295.5,1027.1L290.9,1029.6L287.1,1030.1L284.8,1029.7L283.2,1028.8L280.6,1024.3L279.2,1022.9L278,1022.5L269.7,1025.7L261.6,1029L260.2,1032.2L258,1035.7L255.7,1037.2L253.7,1037.4L251.9,1035.3L248.9,1032.7L246.6,1030.1L247.1,1026L251.7,1019.9L252.3,1015.7L251.7,1008.3L250.5,1004.1L249.1,1004L247,1003.4L240.6,1004L237.4,999.2L236.1,994.1L234.1,992.2L231.9,991L227.2,992.9L223.6,991.8L211.5,987.2L207,980L204.4,979.8L202.2,980.5L201.4,982.3L200,990.7L199,993.2L185.4,976.2L175.9,969.3L177.1,956.7L174.3,954.2L170.7,954L167.9,950.5L170.3,942.9L166.6,944.3L161.4,944.1L157.3,942.1L154.1,931.6L151.9,928.5L147.6,923L141.8,923L139.8,920.4L140.2,913.7L136.1,909.6L130.5,906.2L126,904.2L121.2,893.4L117.5,890.7L114.3,888.6L109.9,890L108.5,893.9L105.6,897.7L102.4,897.2L99.2,895.1L95.7,884.2L94.9,877.6L95.9,865.3L100.4,854.2L103,836.6L107,825.4L109.5,821.7L113.5,806.5L121.2,787L122,782.9L123.6,778.2L124.8,773.8L125.2,766.9L124.2,763.2L124.2,761.1L125.8,758.5L131.3,754.2L138.8,746.9L147.9,736.7L157.3,721.1L161.8,712L163.8,708.8L165.8,707.8L168.9,704.7L171.1,701.3L171.3,699.5L166.2,682.5L163,677L161.2,670.5L160.4,665.7L159.2,661.4L159.8,657.3L158,654.9L153.9,651.6L149.5,646.8L147,639L147,634.6L144.4,630.8L143.4,626.8L145,623L147.2,619.7L147,605.2L146.2,600.8L145,593.1L142.2,587.3L138.2,580.4L133.9,574.7L122.2,564.5L113.9,557.7L109.7,551.4L104.6,544.4L100.8,539.2L96.1,532.7L93.7,523.9L92.3,514.4L93.1,511.3L95.3,509.2L98.3,507.5L100.6,507.1L107.4,502.8L112.1,503.2L113.1,502.3L113.5,500.3L112.9,491.7L113.3,480.2L114.1,470.9L115.1,464.8L127.6,457.6L130.1,454.4L131.3,451.1L131.3,448.1L130.3,445.8L128.5,444.5L120.4,450.7L118.8,449.3L115.1,439.2L113.5,436.1L111.3,432.4L108.7,427.2L108.3,418.3L106.6,413.9L96.7,404.4L92.1,399.3L86,392L78.6,383.2L71.1,375L67.6,369.8L66.4,368.7L66,366.7L68.2,361.1L67.2,355.4L63.4,348L61.8,343.3L62.2,341.5L60.4,340.8L56.3,341.2L52.3,337.8L48.4,330.3L48.2,329L49.3,329.1L54.1,330.3L55.9,330.1L59.2,328.4L64.4,326.6L67.6,326L68.6,325.2L68.9,323.3L66.4,306.3L66.8,302.7L71.7,295.4L71.1,287.9L72.5,277.2L77.9,269.9L82,266.5L83.4,261.3L85.2,260.1L88.5,260.6L95.7,264.5L98.6,264.7L103,264.6L107.6,264.3L109.7,264L124.4,260.1L127.6,259.7L130.7,260.1L132.9,259.9L135.3,258.2L136.9,255.1L138.6,245.2L139.6,243.4L141.6,242L144.8,241L148.3,241.1L153.1,243L156.1,243.1L159.4,242.4L162.4,240.9L164.2,239.2L165.2,237.1L164.4,233.2L162.2,228.2L162.8,227.6L166.8,228.6L172.7,229.9L177.1,229.6L180,228.7L182.8,226.3L186.6,224.1L189.9,224.6L192.7,226.6ZM196.7,814.2L196.1,815.1L193.9,813.3L192.3,811.3L191.5,808.9L194.9,809L196.5,811.3ZM196.5,820.2L196.7,823.4L195.5,827.1L190.5,829.3L188.7,826.3L189.1,821.7L189.9,820.5L194.9,820.8ZM173.9,988.8L172.9,989.1L170.9,984.6L173.5,978.2L176.1,986.1ZM115.1,911.1L114.5,912.1L111.7,901.6L115.7,904.3ZM99.4,849.6L96.3,850.3L96.7,847.2L97.5,845.3L99,844.9L99.6,848.1ZM141.8,929.9L143.2,936.6L141.2,935.2L139.6,932.3L139.6,928.1L140,927.4Z"},{"k":"my","d":"M232.7,1120L228.9,1115.1L226.4,1107L226.4,1091.7L218.6,1070.1L211.9,1040.2L213.1,1029.7L211.3,1018.3L207,1007.5L201.2,999.6L199,993.2L199,993.2L200,990.7L201.4,982.3L202.2,980.5L204.4,979.8L207,980L211.5,987.2L223.6,991.8L227.2,992.9L231.9,991L234.1,992.2L236.1,994.1L237.4,999.2L240.6,1004L247,1003.4L249.1,1004L250.5,1004.1L251.7,1008.3L252.3,1015.7L251.7,1019.9L247.1,1026L246.6,1030.1L248.9,1032.7L251.9,1035.3L253.7,1037.4L255.7,1037.2L258,1035.7L260.2,1032.2L261.6,1029L269.7,1025.7L278,1022.5L279.2,1022.9L280.6,1024.3L283.2,1028.8L284.8,1029.7L287.1,1030.1L290.9,1029.6L295.5,1027.1L298,1022.4L299,1018.6L305.6,1012.1L306.4,1007.4L308.1,1004.2L317.6,1006.3L321.2,1008L331.9,1025L346,1037.1L351.9,1041.5L356.4,1043.6L362.8,1050L368.3,1058.1L380.4,1080.7L382.4,1090.7L383.4,1105.9L381.7,1120L232.7,1120ZM208.3,1056.3L207,1057.8L203,1056.9L203.8,1047.9L206,1046.8L209.5,1048.4L211.1,1049.9ZM184.2,991.9L187.9,997.8L186.2,1000.4L185.2,1001.2L182.8,1000.3L180.6,1002.6L178.4,1003L176.3,999L173.7,997.3L173.1,994.5L176.7,994L178.6,995L182.6,993Z"},{"k":"la","d":"M309.5,116.6L312.5,121.9L319,127.7L326.9,136L329.3,139.8L334.5,142.8L336.1,145.7L337.2,150L337.8,153.4L338.8,155.3L340.8,156.1L343.2,155.2L345,153.5L346.3,148.6L347.3,148.1L348.9,152.1L350.7,152.8L352.9,153.3L354.7,155L355.3,158.1L354.7,161.1L352.5,164.7L351.3,168.3L350.5,173.9L349.3,177.8L351.1,181.4L363.2,198.5L369.1,201.2L383,204.6L387.9,207L392.5,209.2L396.8,208.1L401,202.9L405.9,200.1L415.5,195.7L418,195.5L423.2,197.2L431.7,202.4L437.8,207.1L441.6,209.6L444.6,211.9L444.2,214.5L441.8,217L438.8,218.4L434.9,220.8L432.7,223.2L434.1,224.1L439.8,224.7L446.5,226.9L448.5,229.4L448.9,231.6L449.7,235.1L450.9,236.2L457.2,235.6L459.2,236.4L461.4,238.2L463.6,243L463.6,246.5L459,250.4L457.4,252.8L456.6,256.5L453.5,261L444.8,268.4L442.6,268.9L426.7,264.8L419.4,265L416,265.2L414.3,265.4L413.3,266.9L415.3,271.5L416,276L414.1,279.3L408.7,282.4L406.7,283.8L406.5,285.7L407.9,287.7L412.9,289.8L418.4,291.7L437,303.4L441,306.2L446.1,310.2L451.9,313.3L467.1,317.4L473.9,320.2L475.6,321.7L475.4,323.5L473.7,326L472.3,330.2L472.3,332.7L473.9,335.2L476.4,338.9L482.6,344.5L485.9,347L489.5,347.6L492.7,349L496,353.2L499.8,358.4L500.4,362L502,366.6L505.5,371.9L510.3,377.1L517.2,383.4L521,387.9L522.8,389.7L537.4,400.6L540.8,404.6L545.9,412.3L548.1,413.5L550.1,415L551.5,419.3L551.9,422.4L552.5,431.7L555.2,434.5L557.6,437.9L558.6,440.4L560.8,442.2L563.2,442.6L566.1,440.5L568.3,438.6L569.3,439.2L571.7,445.7L573.7,448L577.6,450.3L581.4,452.1L589.5,460L593.9,462.8L596.8,463.8L599.4,465.1L600,467.6L599,470.2L597.4,471.8L587.9,476.4L586.7,478.4L587.9,481.4L590.3,485.2L592.9,488.4L596.2,491.7L602.8,496.8L608.5,500.9L611.7,505.4L613.5,508.5L612.3,512L609.9,516L608.1,519.4L604.7,521.3L603.9,523.6L605.3,527.1L606.3,529.6L605.7,532.5L606.1,538.7L603.2,540.9L600.4,546.6L598.4,547L593.7,545L591.9,546L588.9,550.1L583.6,554.6L581,554.6L579.2,554.1L577,556L574,559.5L572.7,559.4L567.5,560.2L565.5,559.1L563.2,556.2L559,553.3L555.4,551.2L553.5,549.7L551.7,547.2L550.1,545.7L547.1,549.2L542,552.5L537.2,551.8L534.8,551.4L533.1,556.1L531.7,557L523,557.8L521.4,558.6L522.8,563L527.9,570.5L529.3,574.8L526.1,581.8L517.2,581.6L513.3,578.8L509.5,574.8L508.1,572.8L496.8,568.9L489.1,571.6L486.7,571.5L483.2,568.6L481,566.4L478.8,563.2L477.6,559.9L477.6,558.4L481,557.3L486.3,554.6L490.7,551.5L493.7,548.3L494.8,545L495,541.1L496.2,531.1L497.6,526.2L496.8,520.2L494.5,515.5L494.5,508.4L495.2,504.9L495.6,502.7L499,499.8L501.4,495.7L502.6,490.2L502.8,486.4L501.8,484L498.4,481.7L492.9,479.6L489.5,476.9L488.1,473.5L488.1,470.7L489.9,468.2L485.7,465.4L475.6,462.4L470.1,458.6L468.9,454.4L464.8,448.8L457.6,441.8L453.9,431.9L453.5,418.8L454.3,408.2L457.4,396L453.3,387.1L448.5,382.4L442.2,379L436,374L430.3,367.6L423.4,358.1L415.3,345.6L409.7,340L406.9,341.3L401,340.1L392.1,336.4L384.4,334.5L377.6,334.2L373.3,335L371.3,337L371.1,338.8L372.9,340.7L371.9,342.2L368.5,343.2L365.8,345.3L362.6,349.9L360.4,355.9L357,358.3L351.9,358.8L346.9,360.5L342,363.4L339.6,365.6L339.8,367.2L338.8,367.6L336.4,366.7L335.3,364.7L335.5,361.5L332.9,359.4L327.7,358.4L321.8,354.9L315.3,349.3L310.7,346.3L308.1,345.9L304.4,348.2L299.6,353L295.7,354.9L292.5,353.9L290.1,355.6L288.3,360.1L285.4,363.5L278.4,367.4L278,367.8L270.3,373L264,378.2L256.7,385L253.3,386.2L249.9,384.5L245.2,382.7L242.4,380.3L247.5,368.7L253.7,355.6L255.5,349.7L255.7,345.3L255.1,341.7L252.7,338L250.3,335.1L250.1,333.2L250.9,331.2L253.3,328.1L256.7,323.5L259.6,313.9L263.2,303.8L263,297.6L260,290.9L258.4,284.5L259.6,275.7L259.2,272.4L256.1,270.6L245.6,268.9L242.4,269.2L239.6,270.4L236.9,272.7L233.5,274.2L227,275L220.8,272.1L215.7,267L214.3,260.9L218.2,253.6L220.8,247.7L222.4,242.7L222.2,240.2L221,237.7L219.6,237.4L216.3,234.3L213.1,228.8L209.9,226.2L207.2,226.7L204.6,228.8L202,232.5L200.2,234L198.8,233.3L199.2,230.1L199.6,227L202.6,215.1L206.2,207.3L210.5,203.7L214.9,202.2L219.6,202.8L223.6,202.1L226.8,200.3L226.6,199.1L222.8,198.8L221.2,196.8L222,192.9L223.6,190.4L226.2,189.2L228.7,185.4L231.1,178.7L234.1,175.4L237.6,175.3L243.6,172.4L251.9,166.8L255.1,161.3L258.2,163.8L257,170.1L258.8,171.4L259.6,173.6L259.2,177.2L259.8,180.2L261.2,181.7L263,182.4L271.9,179.8L277.2,179.6L279.6,181.3L281.6,182.3L284.2,183.2L286.4,184.2L287.5,183.9L290.5,181.3L291.5,180.8L291.7,179.6L289.5,177.2L287.3,175.2L287.3,170.8L288.3,163.1L288.5,159.2L288.3,149.7L287.9,147.1L286,143.9L280.6,138.1L279.2,134.5L278.2,130.9L278.4,128.6L277,126L276.3,123.5L278.8,122.3L281.6,119.5L283,115.2L284.4,112L286.4,110.7L288.1,110.2L289.3,110.5L293.9,116.2L299.4,113.3L303.8,113.4L307.5,114.8Z"},{"k":"cn","d":"M763.7,187.4L765.7,189.3L771.3,188L772.2,190.3L772.1,191.5L770.3,194.3L765.7,192.2L761.2,192.6L758,192.4L757,191.1L759.6,188.4ZM790,170.8L784.9,171.2L778.4,177.2L773.6,180.7L770.3,181.1L767.7,179.8L766.3,174.5L765.1,173.9L764.3,178.9L763.1,183L760.8,185.3L753.2,190.4L751.1,195.6L752.4,200.3L762.5,201.4L763.9,204L762.9,206.1L760.4,207.9L759.8,210.6L770.7,219L771.1,222.2L769.3,224L767.3,228L761.6,231.3L749.3,233L739.2,231.3L736,227.5L736.2,224.8L738.8,225.6L741.6,225.3L740.8,222.8L739.6,221.4L734.8,219.2L731.1,213.3L731.9,208.4L729.7,204.6L727.5,201.3L725.1,199.4L723.9,197L726.3,189.6L724.9,185.3L729.3,179.9L730.5,173.9L738.2,171.8L738.8,166.1L733,165.9L729.3,161.7L728.3,163.4L725.3,163.6L720.2,155.6L718.6,154.5L716.2,154.3L717.4,162.9L711.5,166.1L706.5,167.5L699.6,168.1L695.6,169L692.1,168.3L692.9,165.7L694.8,162.6L693,160L689.1,158.1L683.1,158.2L679,157.6L675,157.8L673.4,156.6L669.7,152.6L666.3,150.1L664.9,147.7L666.3,144.7L665.1,143L658.8,142.8L659,146.9L659.6,151.9L661.4,155.6L660.2,157.7L657,159.1L653.6,155.1L652.1,154.2L650.3,154.3L649.1,158.3L646.1,161.8L640.6,161.4L636.2,163.6L631.1,164.6L631.1,164.6L627.5,161.7L621.6,157L619.2,156.4L612.7,158.7L603.4,159.6L601.4,157.2L596.8,159L592.5,153.4L587.3,153.1L581,148.8L578.6,146.6L577.8,143.4L575.8,141.6L573.5,141.9L570.7,140.2L566.1,138.5L562.6,137.4L560.8,138.3L559,138.7L558.6,136.5L558.8,130L558.4,124.2L557.4,121.6L555,119.7L552.9,118.7L552.1,115.8L552.9,109.9L554.4,105.9L557.4,105.3L561.2,102.4L563,98.4L565.3,94.7L556.8,89.4L552.3,87.5L547.3,88.4L541.2,90L537.8,90.4L536.2,89.7L532.7,84.9L530.7,84.2L526.3,83.9L522.6,83.9L520.4,86L517.2,86.6L513.9,86.7L510.5,84.2L505.5,80.8L497.6,78.5L496.6,75.8L494.7,72.5L491.7,69.6L486.7,65.5L482.6,63.5L480.6,64.8L477.8,67.1L467.3,71.9L462.6,73.7L460,75L458,77L457.2,81.9L456.2,87.4L453.3,90.2L450.3,92.3L447.3,92.5L444.4,92.4L441.4,93.2L432.9,98.8L428.9,98.3L425.5,95.2L424.2,93L420.4,93.5L415.5,96.1L413.3,100.9L412.1,105.3L410.9,107.2L409.3,107.8L407.7,107.9L392.5,95.1L391.7,94.5L388.9,97.2L386.3,103.8L384.6,105.2L383.4,104.6L377,96L375.5,95.1L374.1,95.4L372.1,98.3L368.1,102.4L365.2,104.9L365,107.7L361.6,110.1L357.8,112.6L356.4,112.8L353.9,111.9L350.5,108.6L348.1,105.2L342.2,101.8L335.5,99L330.9,96.8L328.3,96.2L326,97.2L324.8,98.6L323.2,101.9L319.2,107.5L315.5,111.9L312.1,114.7L309.5,116.6L307.5,114.8L303.8,113.4L299.4,113.3L293.9,116.2L289.3,110.5L288.1,110.2L286.4,110.7L284.4,112L283,115.2L281.6,119.5L278.8,122.3L276.3,123.5L277,126L278.4,128.6L278.2,130.9L279.2,134.5L280.6,138.1L286,143.9L287.9,147.1L288.3,149.7L288.5,159.2L288.3,163.1L287.3,170.8L287.3,175.2L289.5,177.2L291.7,179.6L291.5,180.8L290.5,181.3L287.5,183.9L286.4,184.2L284.2,183.2L281.6,182.3L279.6,181.3L277.2,179.6L271.9,179.8L263,182.4L261.2,181.7L259.8,180.2L259.2,177.2L259.6,173.6L258.8,171.4L257,170.1L258.2,163.8L255.1,161.3L255.7,160.6L254.5,153.7L254.7,152.1L254.1,151.5L251.9,150.9L248.5,152L238.4,156.4L229.7,164.8L225.8,166.6L221.8,167.3L217.1,165.9L211.7,164.9L204.4,167L200.6,166.1L198.8,164.4L197.5,161.8L198.2,158.5L197.8,156.2L194.7,154.9L191.3,153.9L189.3,150.8L188.3,147.4L189.1,142.9L189.7,138.1L187.9,135.9L182.8,134.8L170.1,132.6L158.8,131.4L154.1,132L150.3,131.4L148.1,130.6L147,129L147,126.9L148.7,122L150.9,117.1L156.1,110.1L156.5,105.3L156.1,99.6L158.6,92.1L163.2,86.5L165.4,84.7L164.8,82.3L163,80L160.4,78.7L156.3,77.2L149.5,76.8L140.6,75.3L129.9,71.9L131.1,65.5L131.1,61.5L129.7,58.3L127.6,56L126.4,53.9L128.3,48.2L125.8,42L123,39.4L120,36.2L119.6,32.7L121,29.5L128.3,22.5L128.3,20.9L126.6,21L124.6,21.2L114.7,23.6L113.5,22.1L109.9,21.2L102.6,21L94.1,21.4L83.4,23.9L73.5,28.2L69.1,31.3L65.2,33.1L62.2,33.8L58.5,32.4L58.8,28.1L65.6,20.3L66.4,14.9L64.4,10.3L64.2,6.6L61.8,4.3L58.5,3.1L56.7,0.4L56.7,-7.2L59.6,-15.1L64.4,-17.6L67.4,-18.9L68,-20L790,-20ZM790,271.1L787.7,271.8L777.8,286.5L775.6,291.1L774,293.1L773.4,295.1L773.6,297.1L771.1,304.2L768.7,312.8L767.3,316.4L764.5,319L760.8,320.5L758.6,320.7L756.4,321.4L751.1,326.1L745.1,329.7L746.1,331.4L746.1,332.9L743.5,334.6L740.8,334.3L732.5,335.7L729.3,338.3L726.1,343.2L724.9,343.9L720,345L716,345.5L709.5,342.1L706.3,341L697.6,339.6L689.1,337.3L683.1,334.6L671.1,328L669.7,316.3L667.5,309.9L667.5,307.6L668.3,287.9L669.1,285.8L670.7,283.9L676,279.5L682.2,276L690.9,268.7L697.4,265.4L702.8,260.6L699.6,260.8L697.2,260.2L699.6,256.1L702,253.9L704.7,252.8L710.5,253.6L715.8,252.8L719.6,249.2L723.3,248.4L737.4,249.5L747.1,247.9L751.9,244.6L754.2,244.4L761.4,245.3L764.1,248.9L763.9,246.5L764.1,244.3L765.5,244.5L774.8,248.8L774.8,243.5L775.4,242.1L778.4,239.9L779.8,240L783.5,244.2L786.9,246.7L790,247.5L790,271.1Z"},{"k":"kh","d":"M360,726.8L359,727.3L358,727.3L357,726.6L357.2,723.3L357.8,721.4L359.6,721ZM375.1,758L372.9,760.1L369.7,755.7L369.7,754.5ZM606.1,538.7L606.9,541.7L604.5,547.4L602.2,552.7L597.6,557.2L597.4,560.6L595.6,570.5L596.4,573.7L597.4,576.5L599,577.9L603,587.6L606.5,596.5L610.1,603.8L610.9,608.4L607.5,620.1L603.6,630.8L603.9,636.1L605.7,641.6L607.3,648.6L608.1,657.8L607.1,663.7L605.3,667.5L602,671.3L599.2,673.2L595.6,669.9L592.9,669.8L589.1,670.8L586.3,672.2L580.4,677.9L573.7,683.2L564.5,684.6L561,688.7L557.2,689.2L549.9,689.4L545.3,690.4L545.5,692.4L545.1,701.9L545.1,704.1L544.5,704.7L541.2,705L535.6,703.5L528.1,701.2L522.8,700.8L520,705L518.4,706.6L516.4,706.8L514.3,707.6L513.7,709.5L513.5,711.8L514.5,715.7L514.8,722L514.6,726.3L516.6,729L527.9,738.2L531.3,740.5L531.7,741.8L529.7,746.8L531.5,753.8L527.9,753.7L522,750.6L519,748.8L515.6,750.2L514.5,750L512.1,746.6L509.1,743.1L505.9,742.8L499.2,744.2L492.5,745.2L489.9,745.2L488.7,745.7L484.8,751L483.2,750.1L476.2,748.1L470.1,747.4L468.7,748.7L469.5,753L470.9,757.1L470.1,758.9L466.5,761.1L462,765L459.2,768.1L457.4,768.9L450.5,768.8L443.6,769.1L440.8,772L438.2,774.3L436,774.9L426.9,767.7L409.1,765.2L407.1,762.1L405.4,761.5L403.8,765.6L393.9,769.5L389.7,767.1L386.7,764.3L387.1,760.7L390.1,757.9L394.9,755.8L397.2,748.5L393.5,739.3L390.3,736.6L386.7,734.4L383.2,737.9L380.2,743.7L377,746.8L372.5,747.5L365.9,747.3L363.4,738.4L362.6,730.9L363.4,722.3L364.4,717.2L358,710.1L357.6,703.5L354.7,699.9L353.9,701.7L353.9,703.6L353.1,702.2L343,682.5L341.4,673.5L343,666.4L344,664L341.2,660.4L337,656.2L329.9,650.7L329.5,642L327.9,631.7L325.8,628.2L322.4,621.9L320.6,616.7L320,602.8L321,601.7L326.2,601.3L332.5,600.3L333.7,598L332.5,596.2L336.6,593.1L342.6,586.2L347.1,579L350.5,574.5L352.5,570L359.2,563.6L368.5,559.2L374.7,558.1L381.2,556.7L387.5,554.5L390.5,554.3L398.2,556.9L402.6,557.6L406.9,557.6L411.5,557.8L415.5,557.6L425,555.7L435.1,557.2L444.2,556L455.2,553.9L460.8,555.3L465.7,557.4L466.5,561.6L467.7,563.5L469.3,565L471.5,565L474.5,562L476.8,559L477.6,558.4L477.6,559.9L478.8,563.2L481,566.4L483.2,568.6L486.7,571.5L489.1,571.6L496.8,568.9L508.1,572.8L509.5,574.8L513.3,578.8L517.2,581.6L526.1,581.8L529.3,574.8L527.9,570.5L522.8,563L521.4,558.6L523,557.8L531.7,557L533.1,556.1L534.8,551.4L537.2,551.8L542,552.5L547.1,549.2L550.1,545.7L551.7,547.2L553.5,549.7L555.4,551.2L559,553.3L563.2,556.2L565.5,559.1L567.5,560.2L572.7,559.4L574,559.5L577,556L579.2,554.1L581,554.6L583.6,554.6L588.9,550.1L591.9,546L593.7,545L598.4,547L600.4,546.6L603.2,540.9Z"},{"k":"mm","d":"M68,-20L67.4,-18.9L64.4,-17.6L59.6,-15.1L56.7,-7.2L56.7,0.4L58.5,3.1L61.8,4.3L64.2,6.6L64.4,10.3L66.4,14.9L65.6,20.3L58.8,28.1L58.5,32.4L62.2,33.8L65.2,33.1L69.1,31.3L73.5,28.2L83.4,23.9L94.1,21.4L102.6,21L109.9,21.2L113.5,22.1L114.7,23.6L124.6,21.2L126.6,21L128.3,20.9L128.3,22.5L121,29.5L119.6,32.7L120,36.2L123,39.4L125.8,42L128.3,48.2L126.4,53.9L127.6,56L129.7,58.3L131.1,61.5L131.1,65.5L129.9,71.9L140.6,75.3L149.5,76.8L156.3,77.2L160.4,78.7L163,80L164.8,82.3L165.4,84.7L163.2,86.5L158.6,92.1L156.1,99.6L156.5,105.3L156.1,110.1L150.9,117.1L148.7,122L147,126.9L147,129L148.1,130.6L150.3,131.4L154.1,132L158.8,131.4L170.1,132.6L182.8,134.8L187.9,135.9L189.7,138.1L189.1,142.9L188.3,147.4L189.3,150.8L191.3,153.9L194.7,154.9L197.8,156.2L198.2,158.5L197.5,161.8L198.8,164.4L200.6,166.1L204.4,167L211.7,164.9L217.1,165.9L221.8,167.3L225.8,166.6L229.7,164.8L238.4,156.4L248.5,152L251.9,150.9L254.1,151.5L254.7,152.1L254.5,153.7L255.7,160.6L255.1,161.3L251.9,166.8L243.6,172.4L237.6,175.3L234.1,175.4L231.1,178.7L228.7,185.4L226.2,189.2L223.6,190.4L222,192.9L221.2,196.8L222.8,198.8L226.6,199.1L226.8,200.3L223.6,202.1L219.6,202.8L214.9,202.2L210.5,203.7L206.2,207.3L202.6,215.1L199.6,227L199.2,230.1L199.2,230.1L192.7,226.6L189.9,224.6L186.6,224.1L182.8,226.3L180,228.7L177.1,229.6L172.7,229.9L166.8,228.6L162.8,227.6L162.2,228.2L164.4,233.2L165.2,237.1L164.2,239.2L162.4,240.9L159.4,242.4L156.1,243.1L153.1,243L148.3,241.1L144.8,241L141.6,242L139.6,243.4L138.6,245.2L136.9,255.1L135.3,258.2L132.9,259.9L130.7,260.1L127.6,259.7L124.4,260.1L109.7,264L107.6,264.3L103,264.6L98.6,264.7L95.7,264.5L88.5,260.6L85.2,260.1L83.4,261.3L82,266.5L77.9,269.9L72.5,277.2L71.1,287.9L71.7,295.4L66.8,302.7L66.4,306.3L68.9,323.3L68.6,325.2L67.6,326L64.4,326.6L59.2,328.4L55.9,330.1L54.1,330.3L49.3,329.1L48.2,329L48.4,330.3L52.3,337.8L56.3,341.2L60.4,340.8L62.2,341.5L61.8,343.3L63.4,348L67.2,355.4L68.2,361.1L66,366.7L66.4,368.7L67.6,369.8L71.1,375L78.6,383.2L86,392L92.1,399.3L96.7,404.4L106.6,413.9L108.3,418.3L108.7,427.2L111.3,432.4L113.5,436.1L115.1,439.2L118.8,449.3L120.4,450.7L128.5,444.5L130.3,445.8L131.3,448.1L131.3,451.1L130.1,454.4L127.6,457.6L115.1,464.8L114.1,470.9L113.3,480.2L112.9,491.7L113.5,500.3L113.1,502.3L112.1,503.2L107.4,502.8L100.6,507.1L98.3,507.5L95.3,509.2L93.1,511.3L92.3,514.4L93.7,523.9L96.1,532.7L100.8,539.2L104.6,544.4L109.7,551.4L113.9,557.7L122.2,564.5L133.9,574.7L138.2,580.4L142.2,587.3L145,593.1L146.2,600.8L147,605.2L147.2,619.7L145,623L143.4,626.8L144.4,630.8L147,634.6L147,639L149.5,646.8L153.9,651.6L158,654.9L159.8,657.3L159.2,661.4L160.4,665.7L161.2,670.5L163,677L166.2,682.5L171.3,699.5L171.1,701.3L168.9,704.7L165.8,707.8L163.8,708.8L161.8,712L157.3,721.1L147.9,736.7L138.8,746.9L131.3,754.2L125.8,758.5L124.2,761.1L124.2,763.2L125.2,766.9L124.8,773.8L123.6,778.2L122,782.9L121.2,787L118.6,787.7L113.5,795.6L111.1,791.6L109.7,787.5L111.3,778.1L108.2,760.4L110.1,758L111.9,756.7L115.5,750L119.6,743.3L120,735.2L123.4,729.3L122.6,724.4L122.8,718.5L123.6,713.9L123.2,709.9L126,705.9L130.7,702.9L128.7,701.8L126.8,699.6L120.6,703L117.5,701.9L116.9,698.4L117.7,694.7L118.1,692.5L120.4,689.9L120.2,684.9L119,680.5L120.8,675.1L117.3,675.1L115.5,674L116.5,671L119.8,668.3L116.9,663.3L119,657.8L119,651L117.5,645.1L117.5,640.8L115.3,633.3L114.1,623.6L109.3,616.4L105.6,605.9L96.1,592.1L96.1,586.3L95.7,581.1L93.5,578.6L90.7,596.9L88.5,593.3L88,583.1L86.6,578.3L88,568.6L82.4,559.1L81.2,552.1L77.5,541.6L78.6,539.2L83.6,541.6L79,535.5L75.3,536.8L72.1,530.3L71.5,512.3L68.4,505.6L70.1,498.8L66.6,474.3L59.6,466.5L61,459.6L62.8,453.6L62.4,442.3L64,438.9L67.4,436.2L64.2,437.2L61.6,437.9L55.3,438.6L48.2,438.8L45.8,430.6L42.2,426.7L39,418.4L37.3,409.1L38.5,407.3L33.1,403.5L31.5,401.2L25.8,395.1L19.2,390.5L20.8,393.7L22.6,395.7L19.2,401.4L22.4,410.8L19.6,416.8L17.1,424.6L14.7,428.5L6.8,436.5L0.4,439.3L-3.7,439.7L-7.5,438.9L-12,434.7L-13,431.2L-13.8,425.4L-15.4,424.6L-17.2,425.2L-14.4,432.8L-14.4,436.3L-9.7,443.1L-11.4,445L-20,448.6L-20,-20ZM94.1,745.1L98.6,754.6L98.1,756.1L97.5,756.8L96.3,756.5L94.5,751.4L91.1,748.1L87,748.7L90.3,744.5L91.7,743.6ZM92.5,801.1L89.9,804.4L88.9,804.2L90.1,798.9L94.7,795L98.4,794.6L98.1,797.1L95.3,800.1ZM94.7,716.2L94.5,717.4L94.1,717.4L92.7,716.5L93.5,711.3L95.7,707.1L97.9,700.8L99,699.4L99.4,702.8L98.1,709.8L97.1,713.7ZM110.9,692.8L108.5,693L107.6,684.2L108.2,682.8L111.3,687.2L116.1,689.9L114.3,691.6ZM112.9,701.5L111.5,712.9L108.2,711.3L106.4,711.3L104.4,704.9L104.4,703.2L103.2,699L111.3,698.2ZM105.2,654.6L106.6,656.1L108.3,656.1L107.8,661.4L103.4,668L100.8,669L99.8,669L100.8,659.3L99,653.9L99.6,650.2L104.4,651.9ZM89.9,679.2L89.3,679.5L88.5,679.4L86.6,678.4L84.6,674.7L85.6,672.1L86.4,671.5L88.4,671.7L89.1,672.1L89.5,673.1L88.9,675.2L89.1,677ZM59,453.6L57.1,454.2L53.9,450.7L53.3,442.1L55.9,440.2L57.3,439.7L59.4,440.8L60,442.1L60.4,443.8L59.8,445.7ZM112.3,744.6L111.1,744.7L109.9,744.5L108.7,743.6L111.5,737.7ZM86.6,704.4L87.2,707.5L83.6,704.2L83,695.1L85.8,700.9L87,702.2ZM86.2,666L85.8,668L82.6,672.1L79.8,669.7L79,668.5L82,665.8L85,666.2L85.8,665.6ZM99.8,627.1L99.4,636.1L96.7,631.7L96.3,626.8L96.5,622.1L97.1,621.3L97.3,622.1L98.8,624.2Z"}]};
+const K = MAP.k, TX = MAP.tx, TY = MAP.ty;
+const proj = (lat,lng)=>[ (lng-103.5)*K+TX, -lat*K+TY ];
+const unproj = (x,y)=>[ (TY-y)/K, (x-TX)/K+103.5 ];
+
+const CATS = [
+  {k:'sted', n:'Sted',        c:'--c-sted'},
+  {k:'mat',  n:'Mat og drikke', c:'--c-mat'},
+  {k:'sov',  n:'Overnatting',   c:'--c-sov'},
+  {k:'akt',  n:'Aktivitet',     c:'--c-akt'},
+  {k:'ute',  n:'Uteliv',        c:'--c-ute'},
+  {k:'shop', n:'Shopping',      c:'--c-shop'},
+  {k:'unnga',n:'Unngå',         c:'--c-unnga'},
+];
+const CAT = Object.fromEntries(CATS.map(c=>[c.k,c]));
+const CITIES = [
+  ['Bangkok','th',13.7563,100.5018,1],['Chiang Mai','th',18.7883,98.9853,1],['Pai','th',19.3590,98.4400,0],['Chiang Rai','th',19.9105,99.8406,0],
+  ['Ayutthaya','th',14.3532,100.5689,0],['Hua Hin','th',12.5684,99.9577,0],['Koh Tao','th',10.0956,99.8404,0],['Koh Phangan','th',9.7311,100.0136,0],
+  ['Koh Samui','th',9.5120,100.0136,1],['Phuket','th',7.8804,98.3923,1],['Krabi','th',8.0863,98.9063,1],['Koh Phi Phi','th',7.7407,98.7784,0],
+  ['Koh Lanta','th',7.6243,99.0400,0],['Khao Sok','th',8.9120,98.5290,0],['Koh Chang','th',12.0550,102.3350,0],
+  ['Hanoi','vn',21.0285,105.8542,1],['Sapa','vn',22.3364,103.8438,0],['Ha Giang','vn',22.8233,104.9836,0],['Ha Long','vn',20.9517,107.0800,1],
+  ['Ninh Binh','vn',20.2506,105.9745,0],['Phong Nha','vn',17.5900,106.2830,0],['Hue','vn',16.4637,107.5909,1],['Da Nang','vn',16.0544,108.2022,1],
+  ['Hoi An','vn',15.8801,108.3380,1],['Nha Trang','vn',12.2388,109.1967,1],['Da Lat','vn',11.9404,108.4583,0],['Ho Chi Minh-byen','vn',10.8231,106.6297,1],
+  ['Mekongdeltaet','vn',10.0452,105.7469,0],['Phu Quoc','vn',10.2899,103.9840,1],
+];
+const CITY = Object.fromEntries(CITIES.map(c=>[c[0],{name:c[0],country:c[1],lat:c[2],lng:c[3],major:c[4]}]));
+const DEFAULT_RATES = {THB:0.32, VND:0.41, USD:10.6, NOK:1};
+
+/* ---------- state ---------- */
+const S = { view:'alle', flights:[], tips:[], plan:[], expenses:[], bookings:[], packing:[], days:{}, settings:null,
+  me:null, canWrite:true, live:false, profiles:{},
+  tab:'tips', cat:null, city:'', q:'', favOnly:false, active:null, editing:null, form:null, picking:false, confirm:null };
+let db=null, user=null;
+
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = ()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200)}
+
+function settings(){
+  const s=S.settings||{};
+  const people=(s.people&&s.people.length?s.people:['Hedda','','','']);
+  return {name:s.name||'', start:s.start||'', end:s.end||'', people, rates:Object.assign({},DEFAULT_RATES,s.rates||{})};
+}
+function peopleNames(){
+  return settings().people.map((p,i)=>p&&p.trim()?p.trim():'Person '+(i+1));
+}
+
+/* ---------- pairs, flights, where-are-we ---------- */
+const GROUPS=['alle','p1','p2'];
+const COUNTRY={VN:{n:'Vietnam',c:'--k-vn'},TH:{n:'Thailand',c:'--k-th'},NO:{n:'Norge',c:'--k-no'},X:{n:'Annet land',c:'--k-x'}};
+function groupName(g){const n=peopleNames();if(g==='p1')return n[0]+' og '+n[1];if(g==='p2')return n[2]+' og '+n[3];return 'Alle fire'}
+function groupShort(g){const n=peopleNames();return g==='p1'?n[0]+' & '+n[1]:g==='p2'?n[2]+' & '+n[3]:'Alle'}
+const isoAdd=(iso,n)=>new Date(new Date(iso+'T12:00:00').getTime()+n*864e5).toISOString().slice(0,10);
+function daysBetween(a,b){const out=[];if(!a||!b||b<a)return out;let d=a;for(let i=0;d<=b&&i<90;i++){out.push(d);d=isoAdd(d,1)}return out}
+function flightsFor(g){return S.flights.filter(f=>g==='alle'||(f.who||'alle')==='alle'||f.who===g)
+  .sort((a,b)=>((a.depDate||'')+(a.depTime||'')).localeCompare((b.depDate||'')+(b.depTime||'')))}
+function rangeFor(g){
+  if(g==='alle'){const r=['p1','p2'].map(rangeFor).filter(r=>r.start);if(!r.length)return {start:'',end:''};
+    return {start:r.map(x=>x.start).sort()[0],end:r.map(x=>x.end).sort().pop()}}
+  const fl=flightsFor(g);
+  if(fl.length){const st=settings();const start=fl[0].depDate;const ends=fl.map(f=>f.arrDate||f.depDate).sort();let end=ends[ends.length-1];
+    if(fl[fl.length-1].country!=='NO'&&st.end&&st.end>end)end=st.end;
+    return {start,end}}
+  const st=settings();return {start:st.start,end:st.end};
+}
+function whereOn(g,date){
+  let loc='NO',fl=[];
+  for(const f of flightsFor(g)){if(f.depDate===date||f.arrDate===date)fl.push(f);if((f.arrDate||f.depDate)<=date)loc=f.country||'X'}
+  return {loc,flights:fl};
+}
+function tripDays(g){g=g||S.view;const r=rangeFor(g);return daysBetween(r.start,r.end)}
+function matchesView(who){who=who||'alle';return S.view==='alle'||who==='alle'||who===S.view}
+function whoOptions(sel){return GROUPS.map(g=>`<option value="${g}" ${sel===g?'selected':''}>${esc(groupName(g))}</option>`).join('')}
+function setView(g){S.view=g;try{localStorage.setItem('view',g)}catch(e){}render()}
+function renderViewSw(){
+  const sw=$('#viewSw');sw.innerHTML=GROUPS.map(g=>`<button type="button" aria-pressed="${S.view===g}" data-g="${g}">${esc(groupShort(g))}</button>`).join('');
+  sw.querySelectorAll('button').forEach(b=>b.onclick=()=>setView(b.dataset.g));
+}
+function cbadge(code){const c=COUNTRY[code]||COUNTRY.X;return `<span class="cbadge"><i style="background:var(${c.c})"></i>${c.n}</span>`}
+function segments(g,days){
+  const segs=[];for(const d of days){const w=whereOn(g,d);const last=segs[segs.length-1];if(last&&last.loc===w.loc){last.to=d}else segs.push({loc:w.loc,from:d,to:d})}
+  return segs.filter(s=>s.loc!=='NO');
+}
+const shortDate=iso=>new Date(iso+'T12:00:00').toLocaleDateString('nb-NO',{day:'numeric',month:'short'});
+function renderTimeline(){
+  const el=$('#timeline');
+  $('#kLegend').innerHTML=['VN','TH','NO'].map(cbadge).join('');
+  const all=tripDays('alle');
+  if(!all.length){el.innerHTML=`<div class="empty"><strong>Legg inn flyreisene deres</strong>Når flyene ligger inne, ser dere her hvilke dager hvert par er i Vietnam og Thailand.</div>`;return}
+  const today=new Date().toISOString().slice(0,10);
+  el.innerHTML=`<div class="tl">${['p1','p2'].map(g=>{
+    const own=new Set(tripDays(g));const segs=segments(g,[...own]);
+    return `<div class="tlrow"><div class="tlname">${esc(groupName(g))}<span class="tlsum">${segs.map(s=>`${(COUNTRY[s.loc]||COUNTRY.X).n} ${shortDate(s.from)}${s.to!==s.from?' – '+shortDate(s.to):''}`).join(' · ')||'Ingen flyreiser ennå'}</span></div>
+      <div class="tlscroll"><div class="tlcells">${all.map(d=>{const w=whereOn(g,d);const on=own.has(d);const c=(COUNTRY[w.loc]||COUNTRY.X).c;
+        return `<div class="tlcell ${d===today?'today':''}" title="${esc(fmtDay(d))}"><div class="bar ${on?'':'off'}" style="${on?`background:var(${c})`:''}">${on&&w.flights.length?'✈':''}</div><span class="d num">${+d.slice(8)}</span></div>`}).join('')}</div></div></div>`}).join('')}</div>`;
+}
+function renderFlights(){
+  $('#flWho').innerHTML=whoOptions($('#flWho').value||S.view);
+  const L=$('#flightList');const fl=flightsFor('alle');
+  if(!fl.length){L.innerHTML=`<div class="muted">Ingen flyreiser lagt inn ennå. Start med utreisen fra Norge.</div>`;return}
+  L.innerHTML=fl.map(f=>`<div class="flight"><div style="min-width:0"><p class="route">${esc(f.from)} → ${esc(f.to)} ${f.no?`<span class="ref">${esc(f.no)}</span>`:''}</p>
+      <div class="when num">${esc(fmtDay(f.depDate))}${f.depTime?' kl. '+esc(f.depTime):''} → ${f.arrDate&&f.arrDate!==f.depDate?esc(fmtDay(f.arrDate))+' ':''}${f.arrTime?'kl. '+esc(f.arrTime):''}</div>
+      <div class="row" style="margin-top:4px"><span class="tag">${esc(groupName(f.who||'alle'))}</span>${cbadge(f.country)}</div></div>
+    <div>${S.canWrite?(S.confirm==='fl:'+f.id?`<span class="confirm"><button class="btn danger" data-del="${f.id}">Slett</button><button class="btn ghost" data-cancel>Avbryt</button></span>`:`<button class="btn ghost" data-ask="fl:${f.id}" aria-label="Slett">✕</button>`):''}</div></div>`).join('');
+  L.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{S.confirm=b.dataset.ask;renderFlights()});
+  L.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{S.confirm=null;renderFlights()});
+  L.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{S.confirm=null;store.del('flights',b.dataset.del)});
+}
+
+/* ---------- store: db when available, memory otherwise ---------- */
+const COLS=['tips','plan','expenses','bookings','packing','days','flights'];
+const store={
+  async put(col,id,data){
+    if(!S.canWrite){toast('Du har bare lesetilgang');return}
+    if(db){ db.collection(col).doc(id).set(data).catch(handleWriteErr) }
+    else { if(col==='days'){S.days[id]=data} else { const a=S[col]; const i=a.findIndex(x=>x.id===id); const row=Object.assign({id},data); if(i>=0)a[i]=row; else a.push(row);} render(); }
+  },
+  async del(col,id){
+    if(!S.canWrite)return;
+    if(db){ db.collection(col).doc(id).delete().catch(handleWriteErr) }
+    else { S[col]=S[col].filter(x=>x.id!==id); render(); }
+  },
+  async putSettings(data){
+    if(!S.canWrite){toast('Du har bare lesetilgang');return}
+    if(db){ db.collection('trip').doc('settings').set(data).catch(handleWriteErr) }
+    else { S.settings=data; render(); }
+  }
+};
+function handleWriteErr(e){
+  console.warn(e);
+  if(e&&e.code==='permission-denied'){toast('Fikk ikke lagret. Sjekk at turlenken er riktig.');return}
+  if(e&&e.code==='resource-exhausted'){toast('Dagens gratiskvote er brukt opp. Prøv igjen i morgen.');return}
+  toast('Fikk ikke lagret. Prøv igjen om litt.');
+}
+function showNotice(t){const n=$('#notice');n.textContent=t;n.hidden=!t}
+
+/* ---------- map ---------- */
+const svg=$('#map'); const NS='http://www.w3.org/2000/svg';
+const VIEWS={all:{x:0,y:0,w:MAP.W,h:MAP.H}};
+function boxFor(lat0,lat1,lng0,lng1){const a=proj(lat1,lng0),b=proj(lat0,lng1);return {x:a[0],y:a[1],w:b[0]-a[0],h:b[1]-a[1]}}
+VIEWS.th=boxFor(5.6,20.6,97.2,105.8);
+VIEWS.vn=boxFor(8.3,23.5,102.0,110.0);
+let vb={...VIEWS.all};
+const gBase=document.createElementNS(NS,'g'), gCity=document.createElementNS(NS,'g'), gPins=document.createElementNS(NS,'g');
+svg.append(gBase,gCity,gPins);
+(function drawBase(){
+  const sea=document.createElementNS(NS,'rect');
+  sea.setAttribute('x',-2000);sea.setAttribute('y',-2000);sea.setAttribute('width',6000);sea.setAttribute('height',6000);sea.setAttribute('fill','transparent');
+  gBase.append(sea);
+  for(const p of MAP.paths){const e=document.createElementNS(NS,'path');e.setAttribute('d',p.d);e.setAttribute('class','country'+(p.k==='th'||p.k==='vn'?' focus':''));gBase.append(e)}
+  const labels=[['Thailand',15.6,100.9],['Vietnam',14.2,108.0],['Laos',19.4,102.6],['Kambodsja',12.7,104.9],['Myanmar',22.0,97.4]];
+  for(const [t,la,lo] of labels){const [x,y]=proj(la,lo);const e=document.createElementNS(NS,'text');e.setAttribute('x',x);e.setAttribute('y',y);e.setAttribute('text-anchor','middle');e.setAttribute('class','clabel');e.dataset.size=(t==='Thailand'||t==='Vietnam')?14:10;e.textContent=t;gBase.append(e)}
+})();
+function setVB(){svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);drawOverlay()}
+function zoomAt(f,cx,cy){
+  const nw=Math.min(Math.max(vb.w*f,60),MAP.W*1.4), r=nw/vb.w;
+  if(cx==null){cx=vb.x+vb.w/2;cy=vb.y+vb.h/2}
+  vb={x:cx-(cx-vb.x)*r,y:cy-(cy-vb.y)*r,w:nw,h:vb.h*r};setVB();
+}
+function fitView(box){
+  const r=svg.getBoundingClientRect(); const ar=(r.width||770)/(r.height||1100);
+  let w=box.w,h=box.h; if(w/h<ar){w=h*ar}else{h=w/ar}
+  vb={x:box.x+box.w/2-w/2,y:box.y+box.h/2-h/2,w,h};setVB();
+}
+function svgPoint(ev){const pt=svg.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse())}
+function unit(){const r=svg.getBoundingClientRect();return Math.max(vb.w/(r.width||1),vb.h/(r.height||1))}
+function drawOverlay(){
+  const u=unit();
+  for(const t of gBase.querySelectorAll('text')){t.setAttribute('font-size',(+t.dataset.size)*u);t.setAttribute('letter-spacing',(+t.dataset.size)*0.2*u)}
+  gCity.textContent='';
+  const zoomed=vb.w<MAP.W*0.62;
+  for(const c of Object.values(CITY)){
+    if(!c.major&&!zoomed)continue;
+    const [x,y]=proj(c.lat,c.lng); if(x<vb.x-20*u||x>vb.x+vb.w+20*u||y<vb.y-20*u||y>vb.y+vb.h+20*u)continue;
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','city');
+    const ci=document.createElementNS(NS,'circle');ci.setAttribute('cx',x);ci.setAttribute('cy',y);ci.setAttribute('r',2.6*u);
+    const t=document.createElementNS(NS,'text');t.setAttribute('x',x+6*u);t.setAttribute('y',y+4*u);t.setAttribute('font-size',12*u);t.style.strokeWidth=3*u;t.textContent=c.name;
+    g.append(ci,t);gCity.append(g);
+  }
+  gPins.textContent='';
+  const tips=filteredTips().filter(t=>typeof t.lat==='number');
+  // active last so it draws on top
+  tips.sort((a,b)=>(a.id===S.active)-(b.id===S.active));
+  for(const t of tips){
+    const [x,y]=proj(t.lat,t.lng);
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','pin'+(t.id===S.active?' active':''));g.dataset.id=t.id;
+    const s=t.id===S.active?1.35:1;
+    const halo=document.createElementNS(NS,'circle');halo.setAttribute('class','halo');halo.setAttribute('cx',x);halo.setAttribute('cy',y);halo.setAttribute('r',8.5*u*s);
+    const dot=document.createElementNS(NS,'circle');dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('r',6*u*s);dot.setAttribute('fill',`var(${(CAT[t.cat]||CAT.akt).c})`);
+    const tt=document.createElementNS(NS,'title');tt.textContent=t.title;
+    g.append(halo,dot,tt);gPins.append(g);
+  }
+  if(S.form&&typeof S.form.lat==='number'){
+    const [x,y]=proj(S.form.lat,S.form.lng);
+    const g=document.createElementNS(NS,'g');
+    const a=document.createElementNS(NS,'circle');a.setAttribute('cx',x);a.setAttribute('cy',y);a.setAttribute('r',10*u);a.setAttribute('fill','none');a.setAttribute('stroke','var(--mango)');a.setAttribute('stroke-width',3*u);
+    const b=document.createElementNS(NS,'circle');b.setAttribute('cx',x);b.setAttribute('cy',y);b.setAttribute('r',3*u);b.setAttribute('fill','var(--mango)');
+    g.append(a,b);gPins.append(g);
+  }
+}
+// interaction
+let drag=null;
+svg.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,vb:{...vb},moved:false,id:e.pointerId};});
+svg.addEventListener('pointermove',e=>{
+  if(!drag)return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y;
+  if(!drag.moved&&Math.hypot(dx,dy)<5)return;
+  if(!drag.moved){drag.moved=true;svg.setPointerCapture(drag.id);$('#mapbox').classList.add('dragging')}
+  const u=unit(); vb={...vb,x:drag.vb.x-dx*u,y:drag.vb.y-dy*u}; setVB();
+});
+svg.addEventListener('pointerup',e=>{
+  const d=drag;drag=null;$('#mapbox').classList.remove('dragging');
+  if(!d||d.moved)return;
+  if(S.picking){const p=svgPoint(e);const [lat,lng]=unproj(p.x,p.y);S.form.lat=+lat.toFixed(5);S.form.lng=+lng.toFixed(5);S.form.loc='pick';S.picking=false;
+    if(!S.form.city){S.form.city=nearestCity(lat,lng)}
+    renderForm();drawOverlay();$('#pickbar').hidden=true;$('#mapbox').classList.remove('picking');document.getElementById('tipForm').scrollIntoView({block:'nearest'});return}
+  const pin=e.target.closest('.pin'); if(pin){selectTip(pin.dataset.id,true)}
+});
+svg.addEventListener('pointercancel',()=>{drag=null;$('#mapbox').classList.remove('dragging')});
+svg.addEventListener('wheel',e=>{e.preventDefault();const p=svgPoint(e);zoomAt(e.deltaY>0?1.15:1/1.15,p.x,p.y)},{passive:false});
+$('#zin').onclick=()=>zoomAt(1/1.4);$('#zout').onclick=()=>zoomAt(1.4);
+document.querySelectorAll('.mapview button').forEach(b=>b.onclick=()=>fitView(VIEWS[b.dataset.view]));
+$('#pickCancel').onclick=()=>{S.picking=false;$('#pickbar').hidden=true;$('#mapbox').classList.remove('picking')};
+new ResizeObserver(()=>drawOverlay()).observe(svg);
+function nearestCity(lat,lng){let best='',bd=1e9;for(const c of Object.values(CITY)){const d=(c.lat-lat)**2+(c.lng-lng)**2;if(d<bd){bd=d;best=c.name}}return bd<0.6?best:''}
+function selectTip(id,scroll){
+  S.active=S.active===id&&!scroll?null:id; drawOverlay(); renderTips();
+  if(scroll){const el=document.getElementById('tip-'+id);if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'})}
+}
+function focusOnMap(t){
+  const [x,y]=proj(t.lat,t.lng);const w=Math.min(vb.w,MAP.W*0.35);const r=svg.getBoundingClientRect();const h=w*((r.height||1100)/(r.width||770));
+  vb={x:x-w/2,y:y-h/2,w,h};S.active=t.id;setVB();renderTips();
+  if(matchMedia('(max-width:860px)').matches)$('#mapbox').scrollIntoView({block:'start'});
+}
+
+/* ---------- tips ---------- */
+const fmtDay=iso=>new Date(iso+'T12:00:00').toLocaleDateString('nb-NO',{weekday:'short',day:'numeric',month:'short'});
+function filteredTips(){
+  const q=S.q.trim().toLowerCase();
+  return S.tips.filter(t=>(!S.cat||t.cat===S.cat)&&(!S.city||t.city===S.city)&&(!S.favOnly||(t.favs||[]).length)
+    &&(!q||[t.title,t.city,t.from,t.note].join(' ').toLowerCase().includes(q)))
+   .sort((a,b)=>((b.favs||[]).length-(a.favs||[]).length)||((b.createdAt||0)-(a.createdAt||0)));
+}
+function renderFilters(){
+  const cf=$('#catFilter');
+  cf.innerHTML=`<button class="chip" aria-pressed="${!S.cat}" data-cat="">Alle</button>`+CATS.map(c=>`<button class="chip" aria-pressed="${S.cat===c.k}" data-cat="${c.k}"><span class="dot" style="background:var(${c.c})"></span>${c.n}</button>`).join('');
+  cf.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.cat=b.dataset.cat||null;renderFilters();renderTips();drawOverlay()});
+  const used=[...new Set(S.tips.map(t=>t.city).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'nb'));
+  $('#cityFilter').innerHTML=`<option value="">Alle steder</option>`+used.map(c=>`<option ${S.city===c?'selected':''}>${esc(c)}</option>`).join('');
+  $('#legend').innerHTML=CATS.map(c=>`<span class="chip"><span class="dot" style="background:var(${c.c})"></span>${c.n}</span>`).join('');
+}
+$('#cityFilter').onchange=e=>{S.city=e.target.value;renderTips();drawOverlay();const c=CITY[S.city];if(c){const [x,y]=proj(c.lat,c.lng);const w=MAP.W*0.25;const r=svg.getBoundingClientRect();const h=w*((r.height||1100)/(r.width||770));vb={x:x-w/2,y:y-h/2,w,h};setVB()}};
+$('#q').oninput=e=>{S.q=e.target.value;renderTips();drawOverlay()};
+$('#favOnly').onchange=e=>{S.favOnly=e.target.checked;renderTips();drawOverlay()};
+
+function personLabel(id){if(!id)return '';if(id===S.me)return 'deg';const m=/^p([0-3])$/.exec(id);return m?peopleNames()[+m[1]]:''}
+function renderTips(){
+  const list=filteredTips(); const el=$('#tipList');
+  $('#nTips').textContent=S.tips.length?S.tips.length:'';
+  if(!S.tips.length){el.innerHTML=`<div class="empty"><strong>Ingen tips ennå</strong>Trykk «Nytt tips» og legg inn det første du har fått. Velg by, så havner det på kartet med en gang.</div>`;return}
+  if(!list.length){el.innerHTML=`<div class="empty"><strong>Ingen treff</strong>Prøv et annet søk eller fjern filtrene.</div>`;return}
+  const days=tripDays();
+  el.innerHTML=list.map(t=>{
+    const c=CAT[t.cat]||CAT.akt; const favs=t.favs||[]; const mine=S.me&&favs.includes(S.me);
+    const by=personLabel(t.addedBy);
+    const maps=typeof t.lat==='number'||t.address?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(t.address&&!/^https?:/i.test(t.address)?t.address:t.title+(t.city?', '+t.city:''))}`:'';
+    const confirming=S.confirm==='tip:'+t.id;
+    return `<article class="tip ${t.id===S.active?'active':''}" id="tip-${t.id}">
+      <div class="spread"><span class="chip"><span class="dot" style="background:var(${c.c})"></span>${c.n}</span>
+        <button class="btn ghost fav" aria-pressed="${!!mine}" data-fav="${t.id}" ${S.canWrite&&S.me?'':'disabled'} aria-label="Favoritt">${mine?'★':'☆'} <span class="num">${favs.length||''}</span></button></div>
+      <h3>${esc(t.title)}</h3>
+      <div class="meta">${t.city?`<span>📍 ${esc(t.city)}</span>`:''}${t.address&&!/^https?:/i.test(t.address)?`<span>${esc(t.address)}</span>`:''}${t.approx?'<span>Omtrentlig plassering</span>':''}${t.from?`<span>Tips fra ${esc(t.from)}</span>`:''}${t.day?`<span>Planlagt ${esc(fmtDay(t.day))}${t.dayWho&&t.dayWho!=='alle'?' ('+esc(groupShort(t.dayWho))+')':''}</span>`:''}${by?`<span>Lagt inn av ${esc(by)}</span>`:''}</div>
+      ${t.note?`<p>${esc(t.note)}</p>`:''}
+      ${t.link?`<div><a href="${esc(safeUrl(t.link))}" target="_blank" rel="noopener">Åpne lenke ↗</a></div>`:''}
+      <div class="acts">
+        ${typeof t.lat==='number'?`<button class="btn ghost" data-show="${t.id}">Vis på kart</button><a class="btn ghost" href="${maps}" target="_blank" rel="noopener">Google Maps ↗</a>`:`<span class="muted" style="padding:6px 8px">Ikke på kartet</span>`}
+        ${S.canWrite?`${days.length?`<select data-day="${t.id}" aria-label="Legg på dag" style="width:auto;font-size:13px;padding:5px 8px"><option value="">Legg på dag …</option>${days.map((d,i)=>`<option value="${d}" ${t.day===d?'selected':''}>Dag ${i+1} · ${fmtDay(d)}</option>`).join('')}</select>`:''}
+        <button class="btn ghost" data-edit="${t.id}">Endre</button>
+        ${confirming?`<span class="confirm">Slette? <button class="btn danger" data-del="${t.id}">Slett</button><button class="btn ghost" data-cancel>Avbryt</button></span>`:`<button class="btn ghost" data-ask="tip:${t.id}">Slett</button>`}`:''}
+      </div></article>`}).join('');
+  el.querySelectorAll('[data-show]').forEach(b=>b.onclick=()=>focusOnMap(S.tips.find(t=>t.id===b.dataset.show)));
+  el.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openForm(S.tips.find(t=>t.id===b.dataset.edit)));
+  el.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{S.confirm=b.dataset.ask;renderTips()});
+  el.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{S.confirm=null;renderTips()});
+  el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{S.confirm=null;store.del('tips',b.dataset.del)});
+  el.querySelectorAll('[data-fav]').forEach(b=>b.onclick=()=>{const t=S.tips.find(x=>x.id===b.dataset.fav);const f=new Set(t.favs||[]);f.has(S.me)?f.delete(S.me):f.add(S.me);store.put('tips',t.id,{...strip(t),favs:[...f]})});
+  el.querySelectorAll('[data-day]').forEach(s=>s.onchange=()=>{const t=S.tips.find(x=>x.id===s.dataset.day);store.put('tips',t.id,{...strip(t),day:s.value,dayWho:s.value?S.view:''})});
+  el.querySelectorAll('.tip').forEach(a=>a.addEventListener('click',e=>{if(e.target.closest('button,a,select'))return;selectTip(a.id.slice(4))}));
+}
+const strip=o=>{const c={...o};delete c.id;return c};
+function safeUrl(u){u=String(u||'').trim();if(!/^https?:\/\//i.test(u))u='https://'+u;return u}
+
+function inArea(lat,lng){return lat>3&&lat<26&&lng>95&&lng<112}
+function coordsFromText(txt){
+  txt=String(txt||'');
+  let m=txt.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)||txt.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)||txt.match(/[?&](?:q|query|ll|destination)=(-?\d+\.\d+)(?:,|%2C)\s*(-?\d+\.\d+)/i)||txt.match(/^\s*(-?\d+\.\d+)\s*[,; ]\s*(-?\d+\.\d+)\s*$/);
+  if(!m)return null;const lat=+m[1],lng=+m[2];return inArea(lat,lng)?{lat,lng}:null;
+}
+function setAddrPos(f,lat,lng,msg,approx){
+  f.lat=+(+lat).toFixed(5);f.lng=+(+lng).toFixed(5);f.approx=!!approx;
+  if(!f.city)f.city=nearestCity(f.lat,f.lng);
+  f.addrMsg=msg;renderForm();drawOverlay();
+  const w=Math.min(vb.w,MAP.W*0.2);const r=svg.getBoundingClientRect();const h=w*((r.height||1100)/(r.width||770));const [x,y]=proj(f.lat,f.lng);vb={x:x-w/2,y:y-h/2,w,h};setVB();
+}
+async function nominatim(q){
+  const u='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=th,vn&accept-language=en&q='+encodeURIComponent(q);
+  const r=await fetch(u,{headers:{'Accept':'application/json'}});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const j=await r.json();return j&&j[0]||null;
+}
+async function geocode(f){
+  const addr=(f.address||'').trim();
+  if(!addr){f.addrMsg='Skriv inn en adresse først';renderForm();return}
+  const c=coordsFromText(addr);
+  if(c){setAddrPos(f,c.lat,c.lng,'Plassert ut fra koordinatene i lenken');return}
+  if(/^https?:\/\/(maps\.app\.goo\.gl|goo\.gl)/i.test(addr)){f.addrMsg='Korte Google Maps-lenker kan ikke leses her. Skriv adressen i stedet, eller åpne lenken og kopier den lange adressen fra nettleseren.';renderForm();return}
+  f.addrMsg='Leter etter adressen …';renderForm();
+  try{
+    let hit=await nominatim(addr);
+    if(!hit&&f.title)hit=await nominatim(f.title+(f.city?', '+f.city:''));
+    if(!hit){fallbackArea(f,'Fant ikke adressen.');return}
+    const lat=+hit.lat,lng=+hit.lon;
+    if(!inArea(lat,lng)){fallbackArea(f,'Fant ikke adressen i Thailand eller Vietnam.');return}
+    const exact=(+hit.place_rank||0)>=26&&hit.category!=='highway';
+    const name=String(hit.display_name||'').split(',').slice(0,2).join(',').trim();
+    setAddrPos(f,lat,lng,(exact?'Fant ':'Omtrentlig plassering: ')+(name||'adressen')+'. Stemmer ikke nålen? Velg «Trykk på kartet» og flytt den.',!exact);
+  }catch(e){
+    fallbackArea(f,'Fikk ikke søkt opp adressen akkurat nå.');
+  }
+}
+function fallbackArea(f,why){
+  const c=CITY[f.city];
+  if(c){f.lat=c.lat;f.lng=c.lng;f.approx=true;f.addrMsg=why+' Nålen settes ved '+c.name+', og adressen lagres så Google Maps-knappen finner frem.'}
+  else{f.addrMsg=why+' Velg område over eller trykk på kartet. Adressen lagres uansett.'}
+  renderForm();drawOverlay();
+}
+function openForm(t){
+  S.form=t?{...t,loc:t.address?'addr':typeof t.lat==='number'?'keep':'none'}:{title:'',cat:'mat',city:'',from:'',note:'',link:'',loc:'city'};
+  S.editing=t?t.id:null; renderForm(); drawOverlay();
+  $('#tipForm').scrollIntoView({block:'nearest'});
+  setTimeout(()=>{const i=$('#fTitle');i&&i.focus({preventScroll:true})},0);
+}
+$('#newTip').onclick=()=>openForm(null);
+function cityOptions(sel){
+  const group=(cc,label)=>`<optgroup label="${label}">${CITIES.filter(c=>c[1]===cc).map(c=>`<option ${sel===c[0]?'selected':''}>${c[0]}</option>`).join('')}</optgroup>`;
+  const custom=sel&&!CITY[sel]?`<option selected>${esc(sel)}</option>`:'';
+  return `<option value="">Velg område …</option>${custom}${group('th','Thailand')}${group('vn','Vietnam')}`;
+}
+function renderForm(){
+  const box=$('#tipForm'); const f=S.form;
+  if(!f){box.innerHTML='';return}
+  const locTxt = f.loc==='addr' ? (f.addrMsg||(typeof f.lat==='number'?`Plassert på ${f.lat.toFixed(4)}, ${f.lng.toFixed(4)}`:'Skriv adressen og trykk «Finn på kartet»')) : f.loc==='pick'||f.loc==='keep'||f.loc==='coords' ? (typeof f.lat==='number'?`Plassert på ${f.lat.toFixed(4)}, ${f.lng.toFixed(4)}`:'') : f.loc==='city'?(f.city?`Settes ved ${esc(f.city)}`:(f.cat==='sted'?'Velg området over, eller trykk på kartet for å plassere stedet nøyaktig':'Velg område over, så settes nålen der')):'Vises ikke på kartet';
+  box.innerHTML=`<form class="formcard" id="tf">
+    <div class="spread"><h3>${S.editing?'Endre tips':'Nytt tips'}</h3><button type="button" class="btn ghost" id="fClose">Lukk</button></div>
+    <label class="f">Hva er tipset?<input type="text" id="fTitle" value="${esc(f.title)}" placeholder="${f.cat==='sted'?'Koh Lipe':'Banh mi hos Madam Khanh'}" required></label>
+    <div><div class="muted" style="margin-bottom:6px">Kategori</div><div class="seg" id="fCat">${CATS.map(c=>`<button type="button" aria-pressed="${f.cat===c.k}" data-k="${c.k}">${c.n}</button>`).join('')}</div></div>
+    <div class="grid2">
+      <label class="f">Område<select id="fCity">${cityOptions(f.city)}</select></label>
+      <label class="f">Tips fra<input type="text" id="fFrom" value="${esc(f.from)}" placeholder="Hvem anbefalte det?"></label>
+    </div>
+    <label class="f">Notat<textarea id="fNote" placeholder="Hva sa de? Pris, beste tidspunkt, hva man bør bestille …">${esc(f.note)}</textarea></label>
+    <label class="f">Lenke (valgfritt)<input type="url" id="fLink" value="${esc(f.link)}" placeholder="Google Maps, Instagram, nettside …"></label>
+    <div>
+      <div class="muted" style="margin-bottom:6px">Plassering på kartet</div>
+      <div class="seg" id="fLoc">
+        <button type="button" data-l="city" aria-pressed="${f.loc==='city'}">Ved stedet</button>
+        <button type="button" data-l="pick" aria-pressed="${f.loc==='pick'||f.loc==='keep'}">Trykk på kartet</button>
+        <button type="button" data-l="addr" aria-pressed="${f.loc==='addr'}">Adresse</button>
+        <button type="button" data-l="coords" aria-pressed="${f.loc==='coords'}">Lim inn koordinater</button>
+        <button type="button" data-l="none" aria-pressed="${f.loc==='none'}">Ikke på kartet</button>
+      </div>
+      ${f.loc==='addr'?`<div class="row" style="margin-top:8px;flex-wrap:nowrap"><input type="text" id="fAddr" value="${esc(f.address||'')}" placeholder="F.eks. 25 Tran Phu, Hoi An, eller lim inn en Google Maps-lenke" style="flex:1"><button type="button" class="btn" id="fAddrGo">Finn på kartet</button></div>`:''}
+      ${f.loc==='coords'?`<input type="text" id="fCoords" style="margin-top:8px" placeholder="F.eks. 15.8771, 108.3266 (høyreklikk i Google Maps for å kopiere)" value="${typeof f.lat==='number'?f.lat+', '+f.lng:''}">`:''}
+      <div class="muted" style="margin-top:6px" id="fLocTxt">${locTxt}</div>
+    </div>
+    <div class="row"><button class="btn primary" type="submit">${S.editing?'Lagre endringer':'Lagre tips'}</button></div>
+  </form>`;
+  const sync=()=>{f.title=$('#fTitle').value;f.from=$('#fFrom').value;f.note=$('#fNote').value;f.link=$('#fLink').value;const a=$('#fAddr');if(a)f.address=a.value};
+  $('#fClose').onclick=()=>{S.form=null;S.editing=null;S.picking=false;$('#pickbar').hidden=true;$('#mapbox').classList.remove('picking');renderForm();drawOverlay()};
+  $('#fCat').querySelectorAll('button').forEach(b=>b.onclick=()=>{sync();f.cat=b.dataset.k;renderForm()});
+  $('#fCity').onchange=e=>{sync();f.city=e.target.value;if(f.loc==='city'){const c=CITY[f.city];if(c){f.lat=c.lat;f.lng=c.lng}}renderForm();drawOverlay()};
+  $('#fLoc').querySelectorAll('button').forEach(b=>b.onclick=()=>{sync();const l=b.dataset.l;f.loc=l;
+    if(l==='pick'){S.picking=true;$('#pickbar').hidden=false;$('#mapbox').classList.add('picking');if(matchMedia('(max-width:860px)').matches)$('#mapbox').scrollIntoView({block:'start'})}
+    else{S.picking=false;$('#pickbar').hidden=true;$('#mapbox').classList.remove('picking')}
+    if(l==='city'){const c=CITY[f.city];if(c){f.lat=c.lat;f.lng=c.lng}}
+    if(l==='none'){delete f.lat;delete f.lng}
+    if(l==='addr'){f.addrMsg=''}
+    renderForm();drawOverlay();if(l==='addr'){const a=$('#fAddr');a&&a.focus()}});
+  const co=$('#fCoords'); if(co)co.oninput=()=>{const m=co.value.match(/(-?\d+(?:\.\d+)?)\s*[,; ]\s*(-?\d+(?:\.\d+)?)/);if(m){f.lat=+m[1];f.lng=+m[2];if(!f.city)f.city=nearestCity(f.lat,f.lng)}else{delete f.lat;delete f.lng}$('#fLocTxt').textContent=typeof f.lat==='number'?`Plassert på ${f.lat.toFixed(4)}, ${f.lng.toFixed(4)}`:'Fant ingen koordinater ennå';drawOverlay()};
+  const ad=$('#fAddr'); if(ad){
+    ad.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('#fAddrGo').click()}};
+    ad.oninput=()=>{f.address=ad.value;const c=coordsFromText(ad.value);if(c){setAddrPos(f,c.lat,c.lng,'Plassert ut fra koordinatene i lenken')}};
+    $('#fAddrGo').onclick=()=>{sync();geocode(f)};
+  }
+  $('#tf').onsubmit=async e=>{e.preventDefault();sync();
+    if(!f.title.trim())return;
+    if(f.cat==='sted'&&!f.city){const hit=Object.values(CITY).find(c=>c.name.toLowerCase()===f.title.trim().toLowerCase());if(hit){f.city=hit.name;if(f.loc==='city'){f.lat=hit.lat;f.lng=hit.lng}}}
+    let lat=f.lat,lng=f.lng;
+    if(f.loc==='city'){const c=CITY[f.city];if(c){const j=()=>(Math.random()-.5)*0.03;lat=+(c.lat+j()).toFixed(5);lng=+(c.lng+j()).toFixed(5)}else{lat=undefined;lng=undefined}}
+    if(f.loc==='none'){lat=undefined;lng=undefined}
+    const old=S.editing?S.tips.find(t=>t.id===S.editing):null;
+    const data={title:f.title.trim(),cat:f.cat,city:f.city||'',from:f.from.trim(),note:f.note.trim(),link:f.link.trim(),address:(f.address||'').trim(),day:old?old.day||'':'',dayWho:old?old.dayWho||'':'',
+      favs:old?old.favs||[]:[],addedBy:old?old.addedBy||null:S.me,createdAt:old?old.createdAt||Date.now():Date.now()};
+    if(typeof lat==='number'&&typeof lng==='number'){data.lat=lat;data.lng=lng;if(f.loc==='addr'&&f.approx)data.approx=true}
+    const id=S.editing||uid();
+    S.form=null;S.editing=null;S.picking=false;$('#pickbar').hidden=true;$('#mapbox').classList.remove('picking');renderForm();
+    await store.put('tips',id,data);S.active=id;toast(old?'Tipset er oppdatert':'Tipset er lagret');drawOverlay();
+  };
+}
+$('#shareTips').onclick=async()=>{
+  const list=filteredTips(); if(!list.length){toast('Ingen tips å kopiere');return}
+  const by={}; for(const t of list){(by[t.city||'Uten sted']??=[]).push(t)}
+  let txt=`Reisetips – Thailand og Vietnam\n`;
+  for(const [city,arr] of Object.entries(by)){txt+=`\n${city.toUpperCase()}\n`;for(const t of arr){txt+=`• ${t.title} (${(CAT[t.cat]||CAT.akt).n.toLowerCase()})${t.note?' – '+t.note.replace(/\n+/g,' '):''}${t.link?' '+safeUrl(t.link):''}\n`}}
+  try{await navigator.clipboard.writeText(txt);toast(`${list.length} tips kopiert. Lim inn i en melding.`)}
+  catch(e){const ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='width:100%;min-height:200px;margin-bottom:12px';$('#tipForm').prepend(ta);ta.select();toast('Marker teksten og kopier den')}
+};
+
+/* ---------- plan ---------- */
+function renderPlan(){
+  const body=$('#planBody'); const days=tripDays();
+  if(!days.length){body.innerHTML=`<div class="empty"><strong>Når reiser dere?</strong>Legg inn flyreisene under Turinfo, så lages en dag for hver dag av turen, for hvert par.<div style="margin-top:12px"><button class="btn primary" id="goInfo">Gå til Turinfo</button></div></div>`;$('#goInfo').onclick=()=>setTab('info');$('#planHint').textContent='';return}
+  $('#planHint').textContent=`${days.length} dager · ${S.view==='alle'?'viser planene til begge par':'viser planen til '+groupName(S.view)}`;
+  const ckey=S.view==='alle'?'city':'city_'+S.view;
+  const cityOpts=sel=>`<option value="">Hvor er dere?</option>`+CITIES.map(c=>`<option ${sel===c[0]?'selected':''}>${c[0]}</option>`).join('')+'<option value="Reisedag" '+(sel==='Reisedag'?'selected':'')+'>Reisedag</option>';
+  const fmtFlight=f=>`✈ ${esc(f.from)} → ${esc(f.to)}${f.no?' ('+esc(f.no)+')':''}`;
+  body.innerHTML=`<div class="days">${days.map((d,i)=>{
+    const meta=S.days[d]||{};
+    let where;
+    if(S.view==='alle'){const a=whereOn('p1',d),b=whereOn('p2',d);const ia=tripDays('p1').includes(d),ib=tripDays('p2').includes(d);
+      where=(a.loc===b.loc&&ia&&ib)?cbadge(a.loc):[ia?`<span class="tag">${esc(groupShort('p1'))}</span> ${cbadge(a.loc)}`:'',ib?`<span class="tag">${esc(groupShort('p2'))}</span> ${cbadge(b.loc)}`:''].filter(Boolean).join(' ')}
+    else where=cbadge(whereOn(S.view,d).loc);
+    const flights=flightsFor(S.view).filter(f=>f.depDate===d||f.arrDate===d).map(f=>({id:f.id,time:f.depDate===d?f.depTime:f.arrTime,text:fmtFlight(f),kind:'f',who:f.who}));
+    const items=[...flights,...S.plan.filter(p=>p.date===d&&matchesView(p.who)).map(p=>({...p,kind:'p'})),...S.tips.filter(t=>t.day===d&&matchesView(t.dayWho)).map(t=>({id:t.id,time:'',text:t.title,kind:'t',cat:t.cat,who:t.dayWho}))]
+      .sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));
+    const tagFor=w=>S.view==='alle'&&w&&w!=='alle'?` <span class="tag">${esc(groupShort(w))}</span>`:'';
+    return `<div class="day"><div class="dhead"><span class="dnum">Dag ${i+1}</span><span class="ddate">${fmtDay(d)}</span></div>
+      <div class="row" style="gap:6px">${where}</div>
+      <select data-dcity="${d}" aria-label="Sted dag ${i+1}" ${S.canWrite?'':'disabled'}>${cityOpts(meta[ckey]||(S.view!=='alle'?meta.city:'')||'')}</select>
+      <div>${items.length?items.map(it=>`<div class="item"><span class="t num">${esc(it.time||'')}</span><span class="txt">${it.kind==='t'?`<span class="dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(${(CAT[it.cat]||CAT.akt).c});margin-right:6px"></span>`:''}${it.kind==='f'?`<b>${it.text}</b>`:esc(it.text)}${tagFor(it.who)}</span>${S.canWrite&&it.kind!=='f'?`<button class="btn ghost x" data-rm="${it.kind}:${it.id}" aria-label="Fjern">✕</button>`:''}</div>`).join(''):'<div class="muted">Ingenting planlagt ennå</div>'}</div>
+      ${S.canWrite?`<form class="addline" data-add="${d}"><input type="time" aria-label="Tid"><input type="text" placeholder="Legg til …" aria-label="Plan" required><button class="btn" type="submit">+</button></form>`:''}
+    </div>`}).join('')}</div>`;
+  body.querySelectorAll('[data-dcity]').forEach(s=>s.onchange=()=>store.put('days',s.dataset.dcity,{...(S.days[s.dataset.dcity]||{}),[ckey]:s.value}));
+  body.querySelectorAll('[data-add]').forEach(f=>f.onsubmit=e=>{e.preventDefault();const [ti,tx]=f.querySelectorAll('input');if(!tx.value.trim())return;store.put('plan',uid(),{date:f.dataset.add,time:ti.value,text:tx.value.trim(),who:S.view,createdAt:Date.now()});tx.value='';ti.value=''});
+  body.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const [k,id]=b.dataset.rm.split(':');if(k==='p')store.del('plan',id);else{const t=S.tips.find(x=>x.id===id);store.put('tips',id,{...strip(t),day:'',dayWho:''})}});
+}
+
+/* ---------- money ---------- */
+const nok=(amt,cur,r)=>cur==='VND'?amt/1000*r.VND:amt*(r[cur]??1);
+const fmtNok=v=>Math.round(v).toLocaleString('nb-NO')+' kr';
+function renderMoney(){
+  const st=settings(), names=peopleNames(), r=st.rates;
+  $('#rateHint').textContent=`Summer i NOK med kurs 1 THB = ${r.THB} kr`;
+  $('#exPaid').innerHTML=names.map((n,i)=>`<option value="${i}">${esc(n)}</option>`).join('');
+  const split=$('#exSplit'); const prev=[...split.querySelectorAll('input')].map(i=>i.checked);
+  split.innerHTML=names.map((n,i)=>`<label class="chip" style="gap:6px"><input type="checkbox" value="${i}" ${prev.length?(prev[i]?'checked':''):'checked'}> ${esc(n)}</label>`).join('');
+  const net=names.map(()=>0); let total=0;
+  for(const e of S.expenses){const v=nok(+e.amount||0,e.currency,r);total+=v;const sp=(e.split&&e.split.length?e.split:names.map((_,i)=>i)).filter(i=>i<names.length);if(!sp.length)continue;net[e.paidBy]+=v;for(const i of sp)net[i]-=v/sp.length}
+  if(!S.expenses.length){$('#balances').innerHTML='';$('#expList').innerHTML=`<div class="empty"><strong>Ingen utgifter ennå</strong>Legg inn hva dere betaler for hverandre underveis, så regner siden ut hvem som skylder hvem.</div>`;return}
+  const tr=[];{const d=net.map((v,i)=>({i,v}));const cr=d.filter(x=>x.v>1).sort((a,b)=>b.v-a.v),de=d.filter(x=>x.v<-1).sort((a,b)=>a.v-b.v);let a=0,b=0;while(a<cr.length&&b<de.length){const m=Math.min(cr[a].v,-de[b].v);tr.push(`${esc(names[de[b].i])} betaler ${esc(names[cr[a].i])} <b class="num">${fmtNok(m)}</b>`);cr[a].v-=m;de[b].v+=m;if(cr[a].v<=1)a++;if(de[b].v>=-1)b++}}
+  $('#balances').innerHTML=`<div class="balances"><div class="bal"><div class="muted">Totalt brukt</div><div class="v num">${fmtNok(total)}</div></div>${names.map((n,i)=>`<div class="bal"><div class="n">${esc(n)}</div><div class="v num ${net[i]>1?'pos':net[i]<-1?'neg':''}">${net[i]>1?'+':''}${fmtNok(net[i])}</div></div>`).join('')}</div>
+    ${tr.length?`<div class="panel settle"><div class="muted">For å gjøre opp</div>${tr.map(t=>`<div>${t}</div>`).join('')}</div>`:''}`;
+  const rows=[...S.expenses].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  $('#expList').innerHTML=`<div class="tablewrap"><table><thead><tr><th>Hva</th><th>Betalt av</th><th>Delt på</th><th class="r">Beløp</th><th class="r">NOK</th><th></th></tr></thead><tbody>${rows.map(e=>{const sp=(e.split&&e.split.length?e.split:names.map((_,i)=>i));return `<tr><td>${esc(e.what)}</td><td>${esc(names[e.paidBy]||'')}</td><td>${sp.length===names.length?'Alle':sp.map(i=>esc(names[i]||'')).join(', ')}</td><td class="r num">${(+e.amount).toLocaleString('nb-NO')} ${esc(e.currency)}</td><td class="r num">${fmtNok(nok(+e.amount,e.currency,r))}</td><td class="r">${S.canWrite?(S.confirm==='exp:'+e.id?`<span class="confirm"><button class="btn danger" data-del="${e.id}">Slett</button><button class="btn ghost" data-cancel>Avbryt</button></span>`:`<button class="btn ghost" data-ask="exp:${e.id}" aria-label="Slett">✕</button>`):''}</td></tr>`}).join('')}</tbody></table></div>`;
+  const L=$('#expList');
+  L.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{S.confirm=b.dataset.ask;renderMoney()});
+  L.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{S.confirm=null;renderMoney()});
+  L.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{S.confirm=null;store.del('expenses',b.dataset.del)});
+}
+$('#expForm').onsubmit=e=>{e.preventDefault();const amt=parseFloat($('#exAmt').value);if(!$('#exWhat').value.trim()||!(amt>0))return;
+  const split=[...$('#exSplit').querySelectorAll('input:checked')].map(i=>+i.value); if(!split.length){toast('Velg minst én å dele på');return}
+  store.put('expenses',uid(),{what:$('#exWhat').value.trim(),amount:amt,currency:$('#exCur').value,paidBy:+$('#exPaid').value,split,createdAt:Date.now(),addedBy:S.me});
+  $('#exWhat').value='';$('#exAmt').value='';toast('Utgiften er lagt til')};
+
+/* ---------- bookings ---------- */
+function renderBook(){
+  const L=$('#bookList');
+  $('#bkWho').innerHTML=whoOptions(renderBook.v===S.view&&$('#bkWho').value||S.view);renderBook.v=S.view;
+  const mine=S.bookings.filter(b=>matchesView(b.who)); $('#nBook').textContent=mine.length||'';
+  if(!mine.length){L.innerHTML=`<div class="empty"><strong>Ingen bookinger ennå</strong>Samle fly, overnatting og transport her, med dato og bekreftelsesnummer, så alle finner dem.</div>`;return}
+  const rows=[...mine].sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));
+  L.innerHTML=rows.map(b=>`<div class="panel booking"><div class="when">${b.date?esc(fmtDay(b.date)):'Uten dato'}</div>
+    <div style="min-width:0"><div class="muted">${esc(b.type)}${b.who&&b.who!=='alle'?` · <span class="tag">${esc(groupShort(b.who))}</span>`:''}</div><div style="font-weight:600;overflow-wrap:anywhere">${esc(b.title)}</div>${b.ref?`<div style="margin-top:4px">Ref. <span class="ref">${esc(b.ref)}</span></div>`:''}${b.note?`<div class="muted" style="margin-top:4px;overflow-wrap:anywhere">${esc(b.note)}</div>`:''}</div>
+    <div>${S.canWrite?(S.confirm==='bk:'+b.id?`<span class="confirm"><button class="btn danger" data-del="${b.id}">Slett</button><button class="btn ghost" data-cancel>Avbryt</button></span>`:`<button class="btn ghost" data-ask="bk:${b.id}" aria-label="Slett">✕</button>`):''}</div></div>`).join('');
+  L.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{S.confirm=b.dataset.ask;renderBook()});
+  L.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{S.confirm=null;renderBook()});
+  L.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{S.confirm=null;store.del('bookings',b.dataset.del)});
+}
+$('#bookForm').onsubmit=e=>{e.preventDefault();if(!$('#bkTitle').value.trim())return;
+  store.put('bookings',uid(),{who:$('#bkWho').value,type:$('#bkType').value,title:$('#bkTitle').value.trim(),date:$('#bkDate').value,ref:$('#bkRef').value.trim(),note:$('#bkNote').value.trim(),createdAt:Date.now()});
+  ['#bkTitle','#bkDate','#bkRef','#bkNote'].forEach(s=>$(s).value='');toast('Bookingen er lagt til')};
+
+/* ---------- packing ---------- */
+function renderPack(){
+  const names=peopleNames(); const who=['Felles',groupName('p1'),groupName('p2'),...names];
+  const sel=$('#pkWho'); const cur=sel.value; sel.innerHTML=who.map(w=>`<option ${cur===w?'selected':''}>${esc(w)}</option>`).join('');
+  const done=S.packing.filter(p=>p.done).length; $('#nPack').textContent=S.packing.length?`${done}/${S.packing.length}`:'';
+  const L=$('#packList');
+  if(!S.packing.length){L.innerHTML=`<div class="empty"><strong>Lista er tom</strong>Legg inn ting selv, eller trykk «Legg inn forslag» for en start med det viktigste før avreise.</div>`;return}
+  const groups=who.map(w=>[w,S.packing.filter(p=>(p.who||'Felles')===w)]).filter(g=>g[1].length);
+  const other=S.packing.filter(p=>!who.includes(p.who||'Felles')); if(other.length)groups.push(['Andre',other]);
+  L.innerHTML=`<div class="packgrid">${groups.map(([w,arr])=>`<div class="panel"><div class="spread"><h3 style="font-size:17px">${esc(w)}</h3><span class="muted num">${arr.filter(p=>p.done).length}/${arr.length}</span></div>
+    <div style="margin-top:8px">${arr.sort((a,b)=>(a.done-b.done)||((a.createdAt||0)-(b.createdAt||0))).map(p=>`<div class="check ${p.done?'done':''}"><input type="checkbox" id="pk-${p.id}" data-tg="${p.id}" ${p.done?'checked':''} ${S.canWrite?'':'disabled'}><label class="txt" for="pk-${p.id}">${esc(p.text)}</label>${S.canWrite?`<button class="btn ghost x" data-rm="${p.id}" aria-label="Fjern">✕</button>`:''}</div>`).join('')}</div></div>`).join('')}</div>`;
+  L.querySelectorAll('[data-tg]').forEach(c=>c.onchange=()=>{const p=S.packing.find(x=>x.id===c.dataset.tg);store.put('packing',p.id,{...strip(p),done:c.checked})});
+  L.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>store.del('packing',b.dataset.rm));
+}
+$('#packForm').onsubmit=e=>{e.preventDefault();const t=$('#pkText').value.trim();if(!t)return;store.put('packing',uid(),{text:t,who:$('#pkWho').value,done:false,createdAt:Date.now()});$('#pkText').value=''};
+$('#packSuggest').onclick=async()=>{
+  const sug=['Pass gyldig minst 6 måneder etter hjemkomst','Sjekk innreise- og visumregler for Thailand og Vietnam','Reiseforsikring for alle','Snakk med vaksinekontor eller lege om vaksiner','Kopi av pass og bookinger på mobilen','Bankkort som funker i utlandet + litt kontanter','Stikkontakt-adapter','Solkrem og myggmiddel','Reiseapotek og plaster','Lett regnjakke'];
+  const have=new Set(S.packing.map(p=>p.text));let n=0;
+  for(const s of sug){if(have.has(s))continue;await store.put('packing',uid(),{text:s,who:'Felles',done:false,createdAt:Date.now()+n});n++}
+  toast(n?`${n} punkter lagt inn`:'Forslagene ligger allerede i lista');
+};
+
+/* ---------- info / header ---------- */
+function renderInfo(){
+  const st=settings();
+  if(document.activeElement&&document.activeElement.closest('[data-panel="info"]'))return;
+  $('#stStart').value=st.start;$('#stEnd').value=st.end;
+  $('#stPeople').innerHTML=st.people.map((p,i)=>`<label class="f">Par ${i<2?1:2} · reisende ${i%2+1}<input type="text" id="stP${i}" value="${esc(p)}" placeholder="${i===0?'Hedda':i===1?'Kjæresten din':i===2?'Kompisen':'Kompisens kjæreste'}"></label>`).join('');
+  $('#rtTHB').value=st.rates.THB;$('#rtVND').value=st.rates.VND;$('#rtUSD').value=st.rates.USD;
+}
+$('#saveInfo').onclick=async()=>{
+  const st=settings();
+  const data={name:st.name,start:$('#stStart').value,end:$('#stEnd').value,people:st.people.map((_,i)=>$('#stP'+i).value.trim()),
+    rates:{THB:+$('#rtTHB').value||DEFAULT_RATES.THB,VND:+$('#rtVND').value||DEFAULT_RATES.VND,USD:+$('#rtUSD').value||DEFAULT_RATES.USD,NOK:1}};
+  if(data.start&&data.end&&data.end<data.start){$('#infoSaved').textContent='Hjemkomst må være etter avreise';return}
+  await store.putSettings(data); showNotice(''); document.activeElement.blur(); $('#infoSaved').textContent='Lagret'; setTimeout(()=>$('#infoSaved').textContent='',2000);
+};
+$('#flTo').addEventListener('input',e=>{const v=e.target.value.trim().toLowerCase();if(!v)return;
+  const hit=Object.values(CITY).find(c=>c.name.toLowerCase()===v||(v.length>3&&c.name.toLowerCase().startsWith(v)));
+  if(hit)$('#flCountry').value=hit.country.toUpperCase();else if(/oslo|gardermoen|bergen|trondheim|stavanger|norge/.test(v))$('#flCountry').value='NO';
+  else if(/saigon|hcmc|ho chi minh/.test(v))$('#flCountry').value='VN';});
+$('#flDepD').addEventListener('change',e=>{if(!$('#flArrD').value)$('#flArrD').value=e.target.value});
+$('#flightForm').onsubmit=e=>{e.preventDefault();
+  const dep=$('#flDepD').value,arr=$('#flArrD').value||dep;if(!dep||!$('#flFrom').value.trim()||!$('#flTo').value.trim())return;
+  if(arr<dep){toast('Ankomst kan ikke være før avreise');return}
+  store.put('flights',uid(),{who:$('#flWho').value,from:$('#flFrom').value.trim(),to:$('#flTo').value.trim(),country:$('#flCountry').value,no:$('#flNo').value.trim(),
+    depDate:dep,depTime:$('#flDepT').value,arrDate:arr,arrTime:$('#flArrT').value,createdAt:Date.now()});
+  // next leg usually starts where this one landed
+  $('#flFrom').value=$('#flTo').value.trim();['#flTo','#flNo','#flDepD','#flDepT','#flArrD','#flArrT'].forEach(s=>$(s).value='');
+  toast('Flyreisen er lagt til')};
+function renderHeader(){
+  const st=settings(); const names=st.people.filter(p=>p&&p.trim());
+  $('#tripPeople').textContent=S.view!=='alle'?groupName(S.view)+' · '+segments(S.view,tripDays(S.view)).map(s=>(COUNTRY[s.loc]||COUNTRY.X).n).filter((v,i,a)=>a.indexOf(v)===i).join(' og ')
+    :names.length>1?names.join(' · '):'Fire reisende · to land';
+  const r=rangeFor(S.view);
+  if(r.start&&r.end){st.start=r.start;st.end=r.end;const a=new Date(st.start+'T12:00:00'),b=new Date(st.end+'T12:00:00');
+    $('#tripDates').textContent=`${a.toLocaleDateString('nb-NO',{day:'numeric',month:'long'})} – ${b.toLocaleDateString('nb-NO',{day:'numeric',month:'long',year:'numeric'})}`;
+    const now=new Date();now.setHours(12,0,0,0);const d=Math.round((a-now)/864e5);const e=Math.round((b-now)/864e5);
+    $('#countdown').innerHTML=d>0?`<b class="num">${d}</b><span>dager til avreise</span>`:e>=0?`<b class="num">${Math.abs(d)+1}</b><span>dag av turen. God tur!</span>`:`<b>✓</b><span>Turen er over. Velkommen hjem</span>`;
+  }else{$('#tripDates').textContent='Desember – januar';$('#countdown').innerHTML=`<b>–</b><span>Sett datoer under Turinfo</span>`}
+}
+
+/* ---------- tabs ---------- */
+function setTab(t){S.tab=t;document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));
+  document.querySelectorAll('[data-panel]').forEach(p=>p.hidden=p.dataset.panel!==t);
+  try{localStorage.setItem('tab',t)}catch(e){}
+  if(t==='tips')requestAnimationFrame(drawOverlay);}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+function render(){renderShare();renderViewSw();renderTimeline();renderFlights();renderHeader();renderFilters();renderTips();drawOverlay();renderPlan();renderMoney();renderBook();renderPack();renderInfo();
+  for(const s of ['#newTip','#packSuggest','#saveInfo']){$(s).disabled=!S.canWrite}
+  $('#flightForm').hidden=!S.canWrite;
+  for(const f of ['#expForm','#bookForm','#packForm']){$(f).closest('.panel').hidden=!S.canWrite}}
+
+/* ---------- boot ---------- */
+try{const v=localStorage.getItem('view');if(GROUPS.includes(v))S.view=v}catch(e){}
+try{const t=localStorage.getItem('tab');if(t&&document.querySelector(`[data-panel="${t}"]`))setTab(t)}catch(e){}
+setVB(); render();
+requestAnimationFrame(()=>fitView(VIEWS.all));
+
+/* ---------- trip code, person, Firebase ---------- */
+const CODE_RE=/^[a-z0-9-]{20,64}$/;
+function readCode(){
+  const h=decodeURIComponent(location.hash.slice(1)).trim().toLowerCase();
+  if(CODE_RE.test(h)){try{localStorage.setItem('tripCode',h)}catch(e){}return h}
+  try{const c=localStorage.getItem('tripCode');return c&&CODE_RE.test(c)?c:''}catch(e){return ''}
+}
+function newCode(){const a='abcdefghjkmnpqrstuvwxyz23456789';const r=crypto.getRandomValues(new Uint8Array(16));let c='asiatur-';for(const x of r)c+=a[x%a.length];return c}
+function shareLink(){return location.origin+location.pathname+'#'+S.code}
+function meKey(){return 'me_'+S.code}
+function gate(html){const g=$('#gate');if(!html){g.hidden=true;return}$('#gateCard').innerHTML=html;g.hidden=false}
+
+function showJoin(err){
+  gate(`<div class="eyebrow">Thailand og Vietnam</div><h2>Velkommen på tur</h2>
+    <p class="muted" style="margin:0">Lim inn turlenken du har fått, eller lag en ny tur.</p>
+    <form id="joinForm" class="stack" style="gap:10px"><input type="text" id="joinCode" placeholder="Lim inn turlenken her"><button class="btn primary" type="submit">Bli med</button></form>
+    ${err?`<div class="err">${esc(err)}</div>`:''}
+    <div class="or">eller</div>
+    <button class="btn" id="newTrip" type="button">Lag en ny tur</button>`);
+  $('#joinForm').onsubmit=e=>{e.preventDefault();const v=$('#joinCode').value.trim();const m=v.toLowerCase().match(/([a-z0-9-]{20,64})\s*$/);
+    if(!m){showJoin('Fant ingen turkode i det du limte inn. Kopier hele lenken og prøv igjen.');return}
+    location.hash=m[1];start(m[1])};
+  $('#newTrip').onclick=()=>{const c=newCode();location.hash=c;start(c,true)};
+}
+function askWho(){
+  const names=peopleNames();
+  gate(`<div class="eyebrow">Thailand og Vietnam</div><h2>Hvem er du?</h2>
+    <p class="muted" style="margin:0">Brukes til favoritter og «lagt inn av». Du kan bytte under Turinfo.</p>
+    <div class="people">${names.map((n,i)=>`<button type="button" data-p="${i}">${esc(n)}</button>`).join('')}</div>
+    <button class="btn ghost" id="justLook" type="button">Hopp over</button>`);
+  $('#gateCard').querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{S.me='p'+b.dataset.p;try{localStorage.setItem(meKey(),S.me)}catch(e){}gate(null);render()});
+  $('#justLook').onclick=()=>{try{localStorage.setItem(meKey(),'-')}catch(e){}gate(null);render()};
+}
+function renderShare(){
+  if(!S.code)return;
+  $('#shareLink').value=shareLink();
+  $('#meName').textContent=S.me&&/^p[0-3]$/.test(S.me)?peopleNames()[+S.me.slice(1)]:'ingen valgt';
+}
+$('#copyLink').onclick=async()=>{const t=shareLink();try{await navigator.clipboard.writeText(t);toast('Lenken er kopiert')}catch(e){$('#shareLink').select();toast('Marker og kopier lenken')}};
+$('#shareLink').onfocus=e=>e.target.select();
+$('#switchMe').onclick=()=>askWho();
+$('#exportBtn').onclick=()=>{
+  const out={exportedAt:new Date().toISOString(),settings:S.settings||{}};
+  for(const c of COLS){out[c]={};if(c==='days'){for(const[k,v]of Object.entries(S.days))out[c][k]=v}else for(const r of S[c])out[c][r.id]=strip(r)}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,2)],{type:'application/json'}));
+  a.download='asiatur-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+};
+$('#importFile').onchange=async e=>{
+  const file=e.target.files[0];e.target.value='';if(!file||!db)return;
+  try{
+    const data=JSON.parse(await file.text());let n=0;
+    if(data.settings&&Object.keys(data.settings).length){const cur=S.settings||{};const hasCur=cur.people&&cur.people.some(p=>p&&p.trim());if(!hasCur){store.putSettings(data.settings);n++}}
+    for(const c of COLS){const rows=data[c]||{};for(const[id,v]of Object.entries(rows)){if(!/^[A-Za-z0-9_-]{1,64}$/.test(id)||typeof v!=='object')continue;db.collection(c).doc(id).set(v).catch(handleWriteErr);n++}}
+    showNotice('');$('#importMsg').textContent=n?`${n} ting importert`:'Fant ingenting å importere';
+  }catch(err){$('#importMsg').textContent='Kunne ikke lese filen. Er det riktig fil?'}
+};
+
+let fbReady=false, unsubs=[];
+function start(code,isNew){
+  S.code=code;try{localStorage.setItem('tripCode',code)}catch(e){}
+  if(location.hash.slice(1)!==code)history.replaceState(null,'','#'+code);
+  if(!fbReady){
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+    const fs=firebase.firestore();
+    fs.settings({ignoreUndefinedProperties:true,merge:true});
+    fs.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+    fbReady=true;
+  }
+  unsubs.forEach(u=>u());unsubs=[];
+  const trip=firebase.firestore().collection('trips').doc(code);
+  db={collection:c=>trip.collection(c)};
+  gate(null);
+  try{S.me=localStorage.getItem(meKey())||null}catch(e){S.me=null}
+  if(S.me==='-')S.me=null;
+  let firstSettings=true, failed=false;
+  const onErr=err=>{console.warn(err);if(failed)return;failed=true;
+    if(err&&err.code==='permission-denied'){showJoin('Denne turlenken virker ikke. Sjekk at du har kopiert hele lenken.')}
+    else showNotice('Får ikke kontakt med databasen akkurat nå. Det du legger inn lagres på denne enheten og sendes når nettet er tilbake.')};
+  for(const col of COLS){
+    unsubs.push(db.collection(col).onSnapshot(snap=>{
+      if(col==='days'){S.days={};for(const d of snap.docs)S.days[d.id]=d.data()}
+      else S[col]=snap.docs.map(d=>({id:d.id,...d.data()}));
+      render();
+    },onErr));
+  }
+  unsubs.push(db.collection('trip').doc('settings').onSnapshot(d=>{
+    S.settings=d.exists?d.data():null;render();
+    if(firstSettings){firstSettings=false;
+      if(isNew&&!d.exists){setTab('info');showNotice('Ny tur laget! Skriv inn navnene under «Reisende og par», og del lenken med de andre.')}
+      else{let m=null;try{m=localStorage.getItem(meKey())}catch(e){}if(!m)askWho()}
+    }
+  },onErr));
+  render();
+}
+(function boot(){
+  const cfg=window.FIREBASE_CONFIG;
+  if(!window.firebase||!cfg||!cfg.apiKey||/LIM_INN/.test(cfg.apiKey)){
+    gate(`<h2>Nesten klar</h2><p style="margin:0">Nettsiden er ikke koblet til databasen ennå. Lim inn Firebase-innstillingene øverst i <b>index.html</b>.</p>`);return}
+  const code=readCode();
+  if(code)start(code);else showJoin();
+  window.addEventListener('hashchange',()=>{const c=readCode();if(c&&c!==S.code)start(c)});
+})();
+})();
+</script>
+
+</body>
+</html>
